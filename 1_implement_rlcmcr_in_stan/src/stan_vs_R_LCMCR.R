@@ -9,7 +9,7 @@
 
 set.seed(19481210)
 
-pacman::p_load(argparse, here, arrow, dplyr, tidyr, cmdstanr, rstan, posterior, LCMCR, ggplot2, broom, patchwork, scales)
+pacman::p_load(argparse, here, arrow, dplyr, tidyr, cmdstanr, rstan, posterior, LCMCR, ggplot2, broom, patchwork, scales, purrr)
 
 data("kosovo_aggregate")
 kosovo <- as_tibble(sapply(kosovo_aggregate, as.numeric) - 1) 
@@ -22,7 +22,7 @@ stan_model3 <- cmdstan_model("./LCMCR_3.stan", pedantic = TRUE)
 stan_model4 <- cmdstan_model("./LCMCR_4.stan", pedantic = TRUE)
 stan_model5 <- cmdstan_model("./LCMCR_5_fixed_alpha.stan", pedantic = TRUE)
 
-fit_stan <- function(model, data, K=10, num.iter=2000, seed=19481210, chains=4, warmup=2000, adapt.delta=0.8, alpha=1) {
+fit_stan <- function(model, data, K=10, num.iter=2000, seed=19481210, chains=4, warmup=2000, adapt.delta=0.8, alpha=NULL) {
   data.factor <- data.frame(lapply(data, factor))
   
   stan_data_tabular <- data %>% 
@@ -39,8 +39,9 @@ fit_stan <- function(model, data, K=10, num.iter=2000, seed=19481210, chains=4, 
                          cell_count = stan_data_tabular$cell_count,
                          list_count = sapply(data, sum),
                          K = K,
-                         alpha = alpha # only used for fixed alpha model
-                         )
+                         alpha = alpha 
+                         ) %>%
+    compact()
   
   fit <- model$sample(data = stan_data_list,
                                 seed = 19481210,
@@ -150,16 +151,11 @@ run_panel <- function(data, K=10, num.iter=2000, seed=19481210, stan.adapt.delta
      )
 }
 
-print_results_summary <- function(results) {
-  print(results$summaries)
-  print(c(results$prop.divergent1, results$prop.divergent2))
-}
-
 ########################################
 # Simulated datasets
 ########################################
 
-simulate_mce <- function(N, list_capture_probs) {
+simulate_mse_dataset <- function(N, list_capture_probs) {
   membership_in_lists <- data.frame(list(V1=as.numeric(runif(N) < list_capture_probs[1]) ))
   J <- length(list_capture_probs)
   
@@ -173,33 +169,33 @@ simulate_mce <- function(N, list_capture_probs) {
 
 # Simulated example from Manrique-Vallier (2016)
 data.sim.hetero1 <- rbind(
-  simulate_mce(2000 * 0.9, c(0.033, 0.033, 0.099, 0.132, 0.033)),
-  simulate_mce(2000 * 0.1, c(0.660, 0.825, 0.759, 0.990, 0.693))
+  simulate_mse_dataset(2000 * 0.9, c(0.033, 0.033, 0.099, 0.132, 0.033)),
+  simulate_mse_dataset(2000 * 0.1, c(0.660, 0.825, 0.759, 0.990, 0.693))
 ) %>% filter(rowSums(across(everything())) > 0)
 
 # More simulated examples (tweak on Manrique-Vallier (2016))
 data.sim.hetero2 <- rbind(
-  simulate_mce(2000 * 0.8, c(0.013, 0.013, 0.099, 0.132, 0.033)),
-  simulate_mce(2000 * 0.2, c(0.560, 0.825, 0.759, 0.990, 0.593))
+  simulate_mse_dataset(2000 * 0.8, c(0.013, 0.013, 0.099, 0.132, 0.033)),
+  simulate_mse_dataset(2000 * 0.2, c(0.560, 0.825, 0.759, 0.990, 0.593))
 ) %>% filter(rowSums(across(everything())) > 0)
 
 # More simulated examples (tweak on Manrique-Vallier (2016))
 data.sim.hetero3 <- rbind(
-  simulate_mce(2000 * 0.8, c(0.113, 0.113, 0.199, 0.232, 0.133)),
-  simulate_mce(2000 * 0.2, c(0.860, 0.925, 0.859, 0.990, 0.793))
+  simulate_mse_dataset(2000 * 0.8, c(0.113, 0.113, 0.199, 0.232, 0.133)),
+  simulate_mse_dataset(2000 * 0.2, c(0.860, 0.925, 0.859, 0.990, 0.793))
 ) %>% filter(rowSums(across(everything())) > 0)
 
 # More simulated examples (3 strata)
 data.sim.hetero4 <- rbind(
-  simulate_mce(2000 * 0.8, c(0.1, 0.05, 0.15, 0.2, 0.1)),
-  simulate_mce(2000 * 0.1, c(0.5, 0.4, 0.6, 0.4, 0.5)),
-  simulate_mce(2000 * 0.1, c(0.8, 0.9, 0.6, 0.7, 0.7))
+  simulate_mse_dataset(2000 * 0.8, c(0.1, 0.05, 0.15, 0.2, 0.1)),
+  simulate_mse_dataset(2000 * 0.1, c(0.5, 0.4, 0.6, 0.4, 0.5)),
+  simulate_mse_dataset(2000 * 0.1, c(0.8, 0.9, 0.6, 0.7, 0.7))
 ) %>% filter(rowSums(across(everything())) > 0)
 
 # More simulated examples (negative list dependencies across strata)
 data.sim.hetero5 <- rbind(
-  simulate_mce(2000 * 0.8, c(0.113, 0.113, 0.199, 0.832, 0.733)),
-  simulate_mce(2000 * 0.2, c(0.860, 0.925, 0.859, 0.190, 0.193))
+  simulate_mse_dataset(2000 * 0.8, c(0.113, 0.113, 0.199, 0.832, 0.733)),
+  simulate_mse_dataset(2000 * 0.2, c(0.860, 0.925, 0.859, 0.190, 0.193))
 ) %>% filter(rowSums(across(everything())) > 0)
 
 results.hetero1 <- run_panel(data.sim.hetero1)
@@ -370,8 +366,6 @@ ks.test( (results.hetero2$estimates %>% filter(model == "R"))$estimates, (result
 ks.test( (results.hetero3$estimates %>% filter(model == "R"))$estimates, (results.hetero3$estimates %>% filter(model == "Stan3"))$estimates )
 ks.test( (results.hetero4$estimates %>% filter(model == "R"))$estimates, (results.hetero4$estimates %>% filter(model == "Stan3"))$estimates )
 ks.test( (results.hetero5$estimates %>% filter(model == "R"))$estimates, (results.hetero5$estimates %>% filter(model == "Stan3"))$estimates )
-
-results.kosovo$summaries
 
 results.kosovo$estimates %>%
   filter(model %in% c("R", "Stan3")) %>%
