@@ -1,0 +1,13 @@
+---
+seed: 100
+models:
+  - LCMCR
+  - LCMCR_2
+  - LCMCR_3
+  - LCMCR_4
+datasets:
+  - sim1
+  - sim2
+  - sim3
+  - sim4
+  - sim5

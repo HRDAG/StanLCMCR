@@ -1,0 +1,25 @@
+---
+seed: 100
+settings:
+  K: 10
+  n_iters: 2000
+  chains: 4
+  warmup: 2000
+  adapt_delta: 0.8
+R_settings:
+  a_alpha: 0.25
+  b_alpha: 0.25
+  buffer_size: 10000
+  thinning: 100
+  K: 10
+  trace: FALSE
+  burnin: 10000
+  n_iters: 2000
+alpha_sweep:
+  dataset: sim5
+  alphas:
+    - alpha: 0.1
+    - alpha: 0.5
+    - alpha: 1
+    - alpha: 2
+    - alpha: 10

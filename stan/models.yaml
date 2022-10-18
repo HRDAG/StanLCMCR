@@ -1,0 +1,31 @@
+---
+models:
+  -
+    name: LCMCR
+    fixed_alpha: false
+    description: The original LCMCR port to Stan written by Shira Mitchell
+  -
+    name: LCMCR_2
+    fixed_alpha: false
+    description: >
+      The same as LCMCR, except now we've fixed the label switching
+      issue, increasing the split R-hat and effective sample size
+      to reasonable values for each variable.
+  -
+    name: LCMCR_3
+    fixed_alpha: false
+    description: >
+      The same as LCMCR2, except now the stick-breaking is done on
+      a logarithmic scale, to address some numerical issues.
+  -
+    name: LCMCR_4
+    fixed_alpha: false
+    description: >
+      The same as LCMCR3, except now the prior for alpha avoids the
+      boundary at alpha=0, by using a lognormal distribution instead
+      of gamma(epsilon, epsilon).
+  -
+    name: LCMCR_5_fixed_alpha
+    fixed_alpha: true
+    description: >
+      The same as LCMCR3, except alpha is fixed in the data block.

@@ -13,7 +13,7 @@ simulate_mse_dataset <- function(N, list_capture_probs) {
 }
 
 # Configuration file for simulations
-simulations <- read_yaml(here("simulate/hand/simulations.yaml"))
+simulations <- read_yaml(here("simulate", "hand", "simulations.yaml"))
 
 # Random seed
 set.seed(simulations$seed)
