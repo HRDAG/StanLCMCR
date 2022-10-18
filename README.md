@@ -18,9 +18,9 @@ The repository structure is broken up into atomic tasks joined together using Ma
 The only R dependency is `pacman`. If it is not installed, run
 
 ```
-Rscript -e 'install.packages("pacman")
+Rscript -e 'install.packages("pacman")'
 ```
 
 in the terminal. To run the project from end-to-end, which will install the necessary dependencies, run `make`.
 
-Note: this will install the required R dependencies, including `cmdstanr`, which will in turn install Stan.
+Note: `make` will install the required R dependencies, including `cmdstanr`, which will in turn install Stan.
