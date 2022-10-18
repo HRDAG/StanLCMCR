@@ -1,5 +1,5 @@
 library(pacman)
-pacman::p_load(here, yaml, dplyr, magrittr)
+pacman::p_load(here, yaml, dplyr, magrittr, LCMCR)
 
 simulate_mse_dataset <- function(N, list_capture_probs) {
   membership_in_lists <- data.frame(list(V1=as.numeric(runif(N) < list_capture_probs[1]) ))
@@ -37,3 +37,8 @@ for (i in 1:length(datasets)) {
 
     write.csv(df, here("simulate", "output", paste(dataset$name, ".csv", sep="")), row.names=FALSE)
 }
+
+# From the LCMCR dataset
+data("kosovo_aggregate")
+kosovo <- as_tibble(sapply(kosovo_aggregate, as.numeric) - 1) 
+write.csv(kosovo, here("simulate", "output", "kosovo.csv"), row.names=FALSE)

@@ -16,13 +16,12 @@ fit_R <- function(data, a_alpha=0.25, b_alpha=0.25, seed=1, buffer_size = 10000,
 }
 
 # Configuration file for fits
-simulations <- read_yaml(here("fit", "hand", "simulations.yaml"))
 fit_params <- read_yaml(here("fit", "hand", "fit.yaml"))
 R_settings <- fit_params$R_settings
-datasets <- simulations$data
+datasets <- fit_params$datasets
 
 for (i in 1:length(datasets)) {
-    dataset_name <- datasets[[i]]$name
+    dataset_name <- datasets[[i]]
     df <- read.csv(here("fit", "input", paste(dataset_name, ".csv", sep="")))
 
     results <- fit_R(df,

@@ -36,22 +36,27 @@ fit_stan <- function(model, data, K=10, num_iter=2000, seed=19481210, chains=4, 
 }
 
 # Configuration file for fits
-models_spec <- read_yaml(here("fit", "hand", "models.yaml"))
-simulations <- read_yaml(here("fit", "hand", "simulations.yaml"))
 fit_params <- read_yaml(here("fit", "hand", "fit.yaml"))
-datasets <- simulations$data
-models <- models_spec$models
+datasets <- fit_params$datasets
+models <- fit_params$models
+alphas <- fit_params$alpha_sweep$alphas
 
-for (i in 1:length(datasets)) {
-    dataset_name <- datasets[[i]]$name
-    df <- read.csv(here("fit", "input", paste(dataset_name, ".csv", sep="")))
+###############################################
+# Fit all of the model-dataset combinations
+###############################################
+
+# Wrap in a conditional to make it easy to skip fitting any models
+if (!is.null(models)) {
     for (j in 1:length(models)) {
         model <- models[[j]]
-        stan_model <- cmdstan_model(exe_file=here("fit", "input", model$name))
-        run_name <- paste(model$name, dataset_name, sep="_")
+        
+        stan_model <- cmdstan_model(exe_file=here("fit", "input", model))
 
-        # only run the models that do not fix alpha
-        if (!model$fixed_alpha) {
+        for (i in 1:length(datasets)) {
+            dataset_name <- datasets[[i]]
+            run_name <- paste(model, dataset_name, sep="_")
+            df <- read.csv(here("fit", "input", paste(dataset_name, ".csv", sep="")))
+
             fitted_model <- fit_stan(stan_model, df,
                                      K=fit_params$settings$K,
                                      num_iter=fit_params$settings$num_iter,
@@ -65,4 +70,30 @@ for (i in 1:length(datasets)) {
             fitted_model$save_object(file = here("fit", "output", paste(run_name, ".rds", sep="")))
         }
     }
+}
+
+###############################################
+# Sweep over alphas for a fixed dataset/model
+###############################################
+
+df <- read.csv(here("fit", "input", paste(fit_params$alpha_sweep$dataset, ".csv", sep="")))
+
+for (i in 1:length(alphas)) {
+    alpha_sweep_model <- cmdstan_model(exe_file=here("fit", "input", fit_params$alpha_sweep$model))
+    alpha <- alphas[[i]]
+
+    run_name <- paste(fit_params$alpha_sweep$model, fit_params$alpha_sweep$dataset, alpha, sep="_")
+
+    fitted_model <- fit_stan(alpha_sweep_model, df,
+                             K=fit_params$settings$K,
+                             num_iter=fit_params$settings$num_iter,
+                             seed=fit_params$seed,
+                             chains=fit_params$settings$chains,
+                             warmup=fit_params$settings$warmup,
+                             adapt_delta=fit_params$settings$adapt_delta,
+                             alpha=alpha, # This is the key argument that is omitted earlier
+                             output_dir=here("fit", "output"),
+                             output_basename=run_name)
+
+    fitted_model$save_object(file = here("fit", "output", paste(run_name, ".rds", sep="")))
 }

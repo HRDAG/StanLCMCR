@@ -1,5 +1,17 @@
 ---
 seed: 100
+datasets:
+  - kosovo
+  - sim1
+  - sim2
+  - sim3
+  - sim4
+  - sim5
+models:
+  - LCMCR
+  - LCMCR_2
+  - LCMCR_3
+  - LCMCR_4
 settings:
   K: 10
   n_iters: 2000
@@ -17,9 +29,10 @@ R_settings:
   n_iters: 2000
 alpha_sweep:
   dataset: sim5
+  model: LCMCR_5_fixed_alpha
   alphas:
-    - alpha: 0.1
-    - alpha: 0.5
-    - alpha: 1
-    - alpha: 2
-    - alpha: 10
+    - 0.1
+    - 0.5
+    - 1
+    - 2
+    - 10

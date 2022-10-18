@@ -6,8 +6,18 @@ models:
   - LCMCR_3
   - LCMCR_4
 datasets:
+  - kosovo
   - sim1
   - sim2
   - sim3
   - sim4
   - sim5
+alpha_sweep:
+  model: LCMCR_5_fixed_alpha
+  dataset: sim5
+  alphas:
+    - 0.1
+    - 0.5
+    - 1
+    - 2
+    - 10

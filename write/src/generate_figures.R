@@ -2,12 +2,21 @@ library(pacman)
 
 pacman::p_load(here, tidyverse, scales, patchwork)
 
-summaries <- read.csv(here("write", "input", "summaries.csv")) 
-estimates <- read.csv(here("write", "input", "estimates.csv")) 
+summaries_all <- read.csv(here("write", "input", "summaries.csv")) 
+estimates_all <- read.csv(here("write", "input", "estimates.csv")) 
+
+summaries_alpha_sweep <- read.csv(here("write", "input", "summaries_alphas.csv"))
 
 fit_model1_dataset1 <- readRDS(here("write", "input", "LCMCR_sim1.rds"))
 fit_model2_dataset1 <- readRDS(here("write", "input", "LCMCR_2_sim1.rds"))
 fit_model4_dataset1 <- readRDS(here("write", "input", "LCMCR_4_sim1.rds"))
+
+summaries <- summaries_all %>% filter(Dataset != "kosovo")
+estimates <- estimates_all %>% filter(Dataset != "kosovo")
+
+# Needed to prevent generating Rplots.pdf in current working directory
+pdf(NULL)
+
 
 ###############################################
 # Plot divergences by model and dataset
@@ -132,3 +141,44 @@ plot.divergent.transitions <- function(stan_fit, chain, varname) {
 
 plot.divergent.transitions(fit_model2_dataset1, 3, "alpha")
 ggsave(here("write", "output", "divergent-alpha-stan2.png"), width=4, height=4)
+
+
+###############################################
+# Kosovo-specific density plot
+###############################################
+
+estimates_all %>%
+  filter(Dataset == "kosovo") %>%
+  filter(model %in% c("R", "LCMCR", "LCMCR_4")) %>%
+  mutate(model = recode_factor(model, R="R", LCMCR = "Stan (v1)", LCMCR_4 = "Stan (v4)")) %>%
+  ggplot() +
+    geom_density(aes(x = estimates, fill = model), alpha = 0.25) +
+    theme_minimal() +
+    labs(x="Estimated population size", y="Density", title="Kosovo") +
+    scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
+    geom_vline(xintercept=10401, linetype="dashed") +
+    theme(legend.position = "top") 
+
+ggsave(here("write", "output", "kosovo.png"), height=4, width=4)
+
+
+###############################################
+# Alpha sweeps
+###############################################
+
+(summaries_alpha_sweep %>% 
+  mutate(alpha_ordered = as.factor(alpha)) %>% #recode_factor(alpha, 0.1="0.1", 0.5="0.5", 1="1", 2="2", 10="10")) %>%
+  ggplot() +
+    geom_point(aes(x=alpha_ordered, y=prop.divergent), size=2) +
+    labs(x="alpha", y="% divergent") +
+    scale_y_continuous(labels = scales::percent)) /
+(summaries_alpha_sweep %>% 
+  mutate(alpha_ordered = as.factor(alpha)) %>% #recode_factor(alpha, 0.1="0.1", 0.5="0.5", 1="1", 2="2", 10="10")) %>%
+  ggplot() +
+  geom_point(aes(x=alpha_ordered, y=q500)) +
+  geom_errorbar(aes(x=alpha_ordered, ymin=q025, ymax=q975), width=0.5) +
+  geom_hline(yintercept=2000, linetype="dotted") +
+  labs(x="alpha", y="Estimates with medians and 95% CIs"))
+
+ggsave(here("write", "output", "divergences-alpha-sweep.png"), width=4, height=6)
+
