@@ -2,14 +2,14 @@ library(pacman)
 
 pacman::p_load(here, tidyverse, scales, patchwork)
 
-summaries_all <- read.csv(here("write", "input", "summaries.csv")) 
-estimates_all <- read.csv(here("write", "input", "estimates.csv")) 
+summaries_all <- read.csv(here("write", "input", "summaries", "summaries.csv")) 
+estimates_all <- read.csv(here("write", "input", "summaries", "estimates.csv")) 
 
-summaries_alpha_sweep <- read.csv(here("write", "input", "summaries_alphas.csv"))
+summaries_alpha_sweep <- read.csv(here("write", "input", "summaries", "summaries_alphas.csv"))
 
-fit_model1_dataset1 <- readRDS(here("write", "input", "LCMCR_sim1.rds"))
-fit_model2_dataset1 <- readRDS(here("write", "input", "LCMCR_2_sim1.rds"))
-fit_model4_dataset1 <- readRDS(here("write", "input", "LCMCR_4_sim1.rds"))
+fit_model1_dataset1 <- readRDS(here("write", "input", "fit", "LCMCR_sim1.rds"))
+fit_model2_dataset1 <- readRDS(here("write", "input", "fit", "LCMCR_2_sim1.rds"))
+fit_model4_dataset1 <- readRDS(here("write", "input", "fit", "LCMCR_4_sim1.rds"))
 
 summaries <- summaries_all %>% filter(Dataset != "kosovo")
 estimates <- estimates_all %>% filter(Dataset != "kosovo")

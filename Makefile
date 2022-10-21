@@ -1,37 +1,26 @@
-.PHONY: compile simulate fit_stan fit_R fit summaries write
+.PHONY: compile simulate fit_stan fit_R fit summaries write scaffold
 
-write: write/input
-	mkdir -p write/output
-	Rscript write/src/generate_figures.R
+all: scaffold write
 
-summaries: summaries/input summaries/hand
-	mkdir -p summaries/output
-	Rscript summaries/src/generate_summaries.R
-	mkdir -p write/input
-	cd write/input/ && ln -sf ../../summaries/output/* .
+write:summaries
+	cd write && make
 
-fit: fit_stan fit_R
+summaries:fit
+	cd summaries && make
 
-fit_stan:fit/input fit/hand
-	mkdir -p fit/output
-	Rscript fit/src/fit_stan.R
-	mkdir -p simulate/input
-	cd simulate/input && ln -sf ../../fit/output/* .
+fit:simulate
+	cd fit && make
 
-fit_R: $(wildcard fit/input/*.csv) fit/hand
-	mkdir -p fit/output
-	Rscript fit/src/fit_R.R
-	mkdir -p summaries/input
-	cd summaries/input && ln -sf ../../fit/output/* .
+simulate:compile
+	cd simulate && make
 
-simulate:simulate/input simulate/hand
-	mkdir -p simulate/output
-	Rscript simulate/src/make_simulations.R
-	mkdir -p fit/input
-	cd fit/input && ln -sf ../../simulate/output/* .
+compile:
+	cd compile && make
 
-compile:compile/input
-	mkdir -p compile/output
-	Rscript compile/src/compile_stan.R
-	mkdir -p fit/input
-	cd fit/input && ln -sf ../../compile/output/* .
+scaffold:
+	mkdir -p compile/output simulate/output fit/input fit/output summaries/output write/input write/output
+	-cd fit/input && ln -s ../../compile/output models
+	-cd fit/input && ln -s ../../simulate/output data
+	-cd summaries && ln -s ../fit/output input
+	-cd write/input && ln -s ../../summaries/output summaries
+	-cd write/input && ln -s ../../fit/output fit

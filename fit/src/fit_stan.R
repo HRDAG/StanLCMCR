@@ -50,12 +50,12 @@ if (!is.null(models)) {
     for (j in 1:length(models)) {
         model <- models[[j]]
         
-        stan_model <- cmdstan_model(exe_file=here("fit", "input", model))
+        stan_model <- cmdstan_model(exe_file=here("fit", "input", "models", model))
 
         for (i in 1:length(datasets)) {
             dataset_name <- datasets[[i]]
             run_name <- paste(model, dataset_name, sep="_")
-            df <- read.csv(here("fit", "input", paste(dataset_name, ".csv", sep="")))
+            df <- read.csv(here("fit", "input", "data", paste(dataset_name, ".csv", sep="")))
 
             fitted_model <- fit_stan(stan_model, df,
                                      K=fit_params$settings$K,
@@ -76,10 +76,10 @@ if (!is.null(models)) {
 # Sweep over alphas for a fixed dataset/model
 ###############################################
 
-df <- read.csv(here("fit", "input", paste(fit_params$alpha_sweep$dataset, ".csv", sep="")))
+df <- read.csv(here("fit", "input", "data", paste(fit_params$alpha_sweep$dataset, ".csv", sep="")))
 
 for (i in 1:length(alphas)) {
-    alpha_sweep_model <- cmdstan_model(exe_file=here("fit", "input", fit_params$alpha_sweep$model))
+    alpha_sweep_model <- cmdstan_model(exe_file=here("fit", "input", "models", fit_params$alpha_sweep$model))
     alpha <- alphas[[i]]
 
     run_name <- paste(fit_params$alpha_sweep$model, fit_params$alpha_sweep$dataset, alpha, sep="_")

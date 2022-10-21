@@ -22,7 +22,7 @@ datasets <- fit_params$datasets
 
 for (i in 1:length(datasets)) {
     dataset_name <- datasets[[i]]
-    df <- read.csv(here("fit", "input", paste(dataset_name, ".csv", sep="")))
+    df <- read.csv(here("fit", "input", "data", paste(dataset_name, ".csv", sep="")))
 
     results <- fit_R(df,
           a_alpha=R_settings$a_alpha,
