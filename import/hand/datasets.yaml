@@ -1,0 +1,42 @@
+---
+data:
+  -
+    name: anonymized-colombia
+    filename: dept-5-hecho-2000-R1.csv
+    description: One stratum of the CO data for one replicate (dept code = 5, year = 2000)
+    delimiter: ","
+    list_names:
+      - in_ruv
+      - in_vp_das
+      - in_urt
+      - in_cancilleria
+      - in_up
+      - in_sijyp
+      - in_sindicalistas
+      - in_siddhh
+      - in_ponal
+      - in_pgn
+      - in_personeria
+      - in_paislibre
+      - in_otros_informes_jep
+      - in_onic
+      - in_oacp
+      - in_otros_lideres_sociales
+      - in_mindefensa
+      - in_jmp
+      - in_jep
+      - in_inml
+      - in_icbf
+      - in_forjandofuturos
+      - in_fgn
+      - in_acomides
+      - in_defensoria
+      - in_credhos
+      - in_conase
+      - in_cnmh
+      - in_cifras_conceptos
+      - in_cev
+      - in_cecoin
+      - in_ccj
+      - in_cceeu
+      - in_arn

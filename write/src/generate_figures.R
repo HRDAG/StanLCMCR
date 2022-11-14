@@ -2,6 +2,13 @@ library(pacman)
 
 pacman::p_load(here, tidyverse, scales, patchwork)
 
+# cmdstanR needed for trace plots
+# also, custom repository
+if (!require("cmdstanr")) {
+  install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+  pacman::p_load(cmdstanr)
+}
+
 summaries_all <- read.csv(here("write", "input", "summaries", "summaries.csv")) 
 estimates_all <- read.csv(here("write", "input", "summaries", "estimates.csv")) 
 
@@ -17,6 +24,8 @@ estimates <- estimates_all %>% filter(Dataset != "kosovo")
 # Needed to prevent generating Rplots.pdf in current working directory
 pdf(NULL)
 
+# Hack for plotting draws without loading cmdstanr
+assert_valid_draws_format <- function(format) { TRUE }
 
 ###############################################
 # Plot divergences by model and dataset
@@ -26,6 +35,7 @@ summaries %>%
   filter(model != "R") %>%
   mutate(model = recode_factor(model, LCMCR="LCMCR_1")) %>%
   mutate(model_ix = as.numeric(substr(model, 7, 7))) %>%
+  filter(substr(Dataset, 1, 3) == "sim") %>%
   filter(model_ix <= 4) %>%
   ggplot() +
     geom_point(aes(x=model_ix, y=prop.divergent, color=Dataset), size=2) +
@@ -43,6 +53,7 @@ ggsave(here("write", "output", "divergences-by-model.png"), width=5, height=5)
 
 summaries %>%
   filter(model %in% c("R", "LCMCR", "LCMCR_4")) %>%
+  filter(substr(Dataset, 1, 3) == "sim") %>%
   mutate(model = recode_factor(model, R="R", LCMCR = "Stan (v1)", LCMCR_4 = "Stan (v4)")) %>%
   ggplot() +
   geom_point(aes(x=Dataset, y=q500, group=model, color=model), position=position_dodge(width=0.5)) +
@@ -59,6 +70,7 @@ ggsave(here("write", "output", "posterior-CIs.png"), width=5, height=4)
 
 estimates %>%
   filter(model %in% c("R", "LCMCR", "LCMCR_4")) %>%
+  filter(substr(Dataset, 1, 3) == "sim") %>%
   mutate(model = recode_factor(model, R="R", LCMCR = "Stan (v1)", LCMCR_4 = "Stan (v4)")) %>%
   ggplot() +
     geom_density(aes(x = estimates, fill = model), alpha = 0.25) +
@@ -160,6 +172,24 @@ estimates_all %>%
     theme(legend.position = "top") 
 
 ggsave(here("write", "output", "kosovo.png"), height=4, width=4)
+
+###############################################
+# Colombia-specific density plot
+###############################################
+
+estimates_all %>%
+  filter(Dataset == "anonymized-colombia") %>%
+  filter(model %in% c("R", "LCMCR_4")) %>%
+  mutate(model = recode_factor(model, R="R", LCMCR = "Stan (v1)", LCMCR_4 = "Stan (v4)")) %>%
+  ggplot() +
+    geom_density(aes(x = estimates, fill = model), alpha = 0.25) +
+    theme_minimal() +
+    labs(x="Estimated population size", y="Density", title="Colombia (no stratification)") +
+    scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
+    theme(legend.position = "top") 
+
+ggsave(here("write", "output", "colombia.png"), height=4, width=4)
+
 
 
 ###############################################

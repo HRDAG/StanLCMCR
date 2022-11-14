@@ -1,4 +1,4 @@
-.PHONY: compile simulate fit_stan fit_R fit summaries write scaffold
+.PHONY: compile import fit_stan fit_R fit summaries write scaffold clean
 
 all: scaffold write
 
@@ -8,19 +8,26 @@ write:summaries
 summaries:fit
 	cd summaries && make
 
-fit:simulate
+fit:import
 	cd fit && make
 
-simulate:compile
-	cd simulate && make
+import:compile
+	cd import && make
 
 compile:
 	cd compile && make
 
+clean:
+	cd compile && make clean
+	cd import && make clean
+	cd fit && make clean
+	cd summaries && make clean
+	cd write && make clean
+
 scaffold:
-	mkdir -p compile/output simulate/output fit/input fit/output summaries/output write/input write/output
+	mkdir -p compile/output import/output fit/input fit/output summaries/output write/input write/output
 	-cd fit/input && ln -s ../../compile/output models
-	-cd fit/input && ln -s ../../simulate/output data
+	-cd fit/input && ln -s ../../import/output data
 	-cd summaries && ln -s ../fit/output input
 	-cd write/input && ln -s ../../summaries/output summaries
 	-cd write/input && ln -s ../../fit/output fit

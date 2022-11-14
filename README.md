@@ -8,7 +8,7 @@ The repository structure is broken up into atomic tasks joined together using Ma
 
 - `stan`: the raw Stan source code for the models
 - `compile`: compiles the Stan code
-- `simulate`: generates the simulated (and other) data
+- `import`: generates the simulated (and other) data
 - `fit`: fits the compiled models (and the R LCMCR code by comparison) against all the datasets
 - `summaries`: creates summaries of each of the fits
 - `write`: generates the figures ultimately used in the blogpost

@@ -2,7 +2,8 @@ library(pacman)
 pacman::p_load(here, cmdstanr, yaml, tidyverse)
 
 fit_stan <- function(model, data, K=10, num_iter=2000, seed=19481210, chains=4, warmup=2000, adapt_delta=0.8, alpha=NULL, output_dir=NULL, output_basename=NULL) {
-  data.factor <- data.frame(lapply(data, factor))
+  data.factor <- data.frame(lapply(data, factor)) %>%
+    select_if(function(col) length(levels(col)) > 1)
   
   stan_data_tabular <- data %>% 
     group_by_all() %>%
@@ -78,22 +79,24 @@ if (!is.null(models)) {
 
 df <- read.csv(here("fit", "input", "data", paste(fit_params$alpha_sweep$dataset, ".csv", sep="")))
 
-for (i in 1:length(alphas)) {
-    alpha_sweep_model <- cmdstan_model(exe_file=here("fit", "input", "models", fit_params$alpha_sweep$model))
-    alpha <- alphas[[i]]
+if (length(alphas) > 0) {
+    for (i in 1:length(alphas)) {
+        alpha_sweep_model <- cmdstan_model(exe_file=here("fit", "input", "models", fit_params$alpha_sweep$model))
+        alpha <- alphas[[i]]
 
-    run_name <- paste(fit_params$alpha_sweep$model, fit_params$alpha_sweep$dataset, alpha, sep="_")
+        run_name <- paste(fit_params$alpha_sweep$model, fit_params$alpha_sweep$dataset, alpha, sep="_")
 
-    fitted_model <- fit_stan(alpha_sweep_model, df,
-                             K=fit_params$settings$K,
-                             num_iter=fit_params$settings$num_iter,
-                             seed=fit_params$seed,
-                             chains=fit_params$settings$chains,
-                             warmup=fit_params$settings$warmup,
-                             adapt_delta=fit_params$settings$adapt_delta,
-                             alpha=alpha, # This is the key argument that is omitted earlier
-                             output_dir=here("fit", "output"),
-                             output_basename=run_name)
+        fitted_model <- fit_stan(alpha_sweep_model, df,
+                                 K=fit_params$settings$K,
+                                 num_iter=fit_params$settings$num_iter,
+                                 seed=fit_params$seed,
+                                 chains=fit_params$settings$chains,
+                                 warmup=fit_params$settings$warmup,
+                                 adapt_delta=fit_params$settings$adapt_delta,
+                                 alpha=alpha, # This is the key argument that is omitted earlier
+                                 output_dir=here("fit", "output"),
+                                 output_basename=run_name)
 
-    fitted_model$save_object(file = here("fit", "output", paste(run_name, ".rds", sep="")))
+        fitted_model$save_object(file = here("fit", "output", paste(run_name, ".rds", sep="")))
+    }
 }

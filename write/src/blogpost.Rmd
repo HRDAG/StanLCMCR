@@ -1,0 +1,188 @@
+---
+title: |
+  ![](../assets/hrdag-logo.png)
+  
+  Implementing LCMCR in Stan
+author: "Sam Zhang"
+date: "`r Sys.Date()`"
+always_allow_html: true
+output:
+  html_document:
+    code_folding: hide
+    fig_height: 5
+    fig_width: 6
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+---
+
+# Motivation
+
+The statistical core of HRDAG’s methodology is to estimate undocumented events using several intersecting datasets, a technique called [multiple systems estimation (MSE)](https://hrdag.org/tech-notes/basic-mse.html). Since 2016, HRDAG has used a fully Bayesian technique using latent class models, called [LCMCR](https://onlinelibrary.wiley.com/doi/full/10.1111/biom.12502), with a [corresponding R package](https://cran.r-project.org/package=LCMCR).
+
+The R package is a highly optimized [Gibbs sampler](https://en.wikipedia.org/wiki/Gibbs_sampling), which has both pros and cons. On the one hand, the technique is fast and reliable, and has produced useful estimates for HRDAG over the last six years. On the other hand, the heavy optimization combined with the nature of Gibbs sampling makes it difficult to extend the model to accommodate desired future features.
+
+To increase the future extensibility of our models, we have implemented LCMCR in Stan, an easy-to-use platform for statistical modeling, where we input the model in the declarative format of the [Stan probabilistic programming language](https://mc-stan.org). All of the Stan code, and the code for running the diagnostic experiments below, [are available on Github](https://github.com/HRDAG/StanLCMCR).
+
+# Diagnosing the Stan implementation
+
+As a first order of business, we generate five simulated datasets (all of which have a true underlying population size of N=2000), and compare the outputs between the R LCMCR package and our Stan implementation.
+
+The first simulation is identical to the simulation used in Manrique-Vallier (2016). There are two strata, with 90% of the population falling into the first strata, and 10% falling into the remaining strata, and five lists. The probability of being observed in a list by strata is as follows:
+
+```{r}
+library(pacman)
+pacman::p_load(here, yaml, dplyr, magrittr, LCMCR)
+
+simulations <- read_yaml(here("write", "hand", "simulations.yaml"))
+datasets_raw <- simulations$data
+
+extract_table_df <- function(dataset_rows) {
+    strata <- c()
+    ns <- c()
+    l1 <- c()
+    l2 <- c()
+    l3 <- c()
+    l4 <- c()
+    l5 <- c()
+    for (i in 1:length(dataset_rows)) {
+        raw_row <- dataset_rows[[i]]
+        strata <- c(strata, i)
+        ns <- c(ns, raw_row$size)
+        l1 <- c(l1, raw_row$probs[[1]])
+        l2 <- c(l2, raw_row$probs[[2]])
+        l3 <- c(l3, raw_row$probs[[3]])
+        l4 <- c(l4, raw_row$probs[[4]])
+        l5 <- c(l5, raw_row$probs[[5]])
+    }
+
+    data.frame(Stratum=strata, N=ns, `List 1`=l1, `List 2`=l2, `List 3`=l3, `List 4`=l4, `List 5`=l5)
+}
+
+df_table <- extract_table_df(datasets_raw[[1]]$rows)
+knitr::kable(df_table)
+```
+
+For the second simulated dataset, we lower the probabilities of observation, and increase the proportion of people in the second stratum:
+
+```{r}
+df_table <- extract_table_df(datasets_raw[[2]]$rows)
+knitr::kable(df_table)
+```
+
+For the third simulated dataset, we create an example with higher probabilities of observation:
+
+```{r}
+df_table <- extract_table_df(datasets_raw[[3]]$rows)
+knitr::kable(df_table)
+```
+
+For the fourth simulated dataset, we introduce three strata:
+
+```{r}
+df_table <- extract_table_df(datasets_raw[[4]]$rows)
+knitr::kable(df_table)
+```
+
+For the fifth simulated dataset, we introduce negative list dependencies across the strata:
+
+
+```{r}
+df_table <- extract_table_df(datasets_raw[[5]]$rows)
+knitr::kable(df_table)
+```
+
+
+We fit models to these examples using 1000 iterations and K=10 maximum latent classes. For Stan, we used four chains and 2000 warmup iterations. For the R LCMCR implementation, we used a buffer size of 10000, `thinning=100`, `a_alpha=b_alpha=0.25`, with a burn-in of 10000 iterations.
+
+However, we notice two problems immediately:
+1. The effective sample size and split R-hat diagnostics for several of the variables are unacceptably high.
+2. The number of divergences reported by Hamiltonian Monte Carlo are unacceptably high (often around 30% of iterations are divergent).
+
+## Label switching
+
+One of the reasons that the variables are poorly estimated by Stan is because of a problem in latent class models known as label switching. Fundamentally, unless we specify some ordering to the latent classes, there is no reason that "Latent Class 1" and "Latent Class 3" couldn’t swap places. For K latent classes, we have a highly multimodal posterior where each of the K! permutation of the class labels could serve as a valid labeling. In practice, this leads to poor mixing of the chains and unacceptably low effective sample sizes.
+
+![Notice how two of the latent classes appear to swap parameter values in the trace plots below, in some of the chains, for fitting the Stan model on the first simulated dataset.](../output/label-switching-stan1.png){width=80%}
+
+We resolve this issue by imposing an ordering on the latent class labels. In particular, we require that the classes be in descending order in size, which we implement by sorting the parameters indexed by latent classes in each "iteration".
+
+![This appears to resolve the issue, and we now report (mostly) satisfactory effective sample size and split R-hat parameter values on the permuted data.](../output/label-switching-stan2.png){width=80%}
+
+## Divergent transitions
+
+Generally, MCMC relies on an assumption called [geometric ergodicity](https://mc-stan.org/users/documentation/case-studies/divergences_and_bias.html) for a central limit theorem to hold, and for parameters to be estimated in an unbiased fashion in computationally reasonable time limits. Stan and its approach of Hamiltonian Monte Carlo have the advantage over previous methods that deviations from geometric ergodicity can be easily detected through the notion of "divergent transitions". Divergent transitions suggest that estimates may be biased due to poor exploration of the posterior, and should be addressed before trusting the results of the model.
+
+![To diagnose divergences, we plot the iteration against the parameter values (a trace plot) with the starting value of divergent transitions highlighted, as well as the density of values for which divergent transitions appear.](../output/divergent-alpha-stan2.png){width=40%}
+
+Since the stick-breaking prior is controlled by a beta(1, alpha) prior, and when alpha is small, the breaks tend to concentrate near one, producing highly skewed distributions in latent class size. This may produce numerical issues. We can confirm this behavior by fixing alpha to a predefined value, and examining the behavior of divergences. 
+
+![Using the first simulated dataset, we find that a smaller alpha (alpha = 0.1) leads to many divergences, and that the estimates are relatively robust to choices of alpha.](../output/divergences-alpha-sweep.png){width=40%}
+
+Although we could fix the divergent transitions issue by hard-coding alpha (and indeed, setting alpha = 1 is a common prior that is equivalent to two randomly selected individuals having a 50-50 chance of being in the same latent class, producing a small number of latent classes relative to the sample size, cf BDA3 p.553) but we prefer to keep our model more flexible.
+
+We address this through several approaches: first, we reparameterize the stick-breaking code using a logarithmic scale, to make the model more numerically stable. Second, since the issue arises when alpha is very small, we replace the gamma(0.5, 0.5) prior on alpha with a boundary-avoiding lognormal(0, 0.25) prior.  The lognormal(0, 0.25) prior has a similar mean (1.03, versus 1 from gamma(0.25, 0.25)), and conveniently prevents alpha from reaching values that are too small. Moreover, it is more symmetric on the log-scale and therefore [more computationally friendly](https://discourse.mc-stan.org/t/sampling-from-the-prior-why-am-i-seeing-divergent-transitions/25407/6) to Stan’s adaptive warm-up.
+
+Overall, we have reduced the divergences significantly from the starting model, where:
+- Model 1 = original model
+- Model 2 = Model 1 + fixed label switching
+- Model 3 = Model 2 + logarithmic stick-breaking
+- Model 4 = Model 3 + boundary-avoiding prior for alpha
+
+![](../output/divergences-by-model.png){width=55%}
+
+A quick check of a prior-posterior plot of alpha shows that (a) we’ve successfully bounded alpha away from pathological values close to zero, and (b) that the data is sufficiently informative to update the prior distribution.
+
+![](../output/alpha-prior-posterior.png){width=40%}
+
+Since we learned that the posterior outputs are not too sensitive to the choice of alpha, even when alpha is fixed, we are reassured that this boundary-avoiding prior is an acceptable compromise between computational tractability and model flexibility.
+
+# Can we trust the new model?
+
+## Comparison with R package on simulated data
+
+Using our five simulated datasets, we compare the posterior distributions of the estimated population size N in the R LCMCR package with the first iteration and the final iteration of our Stan implementation.
+
+![](../output/posterior-densities.png){width=40%}
+
+![](../output/posterior-CIs.png){width=50%}
+
+In all five cases, the posterior distributions generated by Stan were very similar to the distributions generated by R, with two out of five simulations statistically indistinguishable by two-sided two-sample Kolmogorov-Smirnov test (p > 0.05).
+
+The Stan code performed comparably in recovering the true values compared to the R code in each of the simulated datasets. Interestingly, we noticed that the first version of the Stan code performed similarly as well, even before fixing the issues with label switching and divergences. However, it was necessary to fix the warnings for us to remain confident in our code as we build further extensions to the model.
+
+## Comparison with R package on known data
+
+Next, we use a real-life dataset consisting of four overlapping lists documenting killings in the Kosovo war. This dataset is interesting because a subsequent project, the [Kosovo Memory Book](https://hrdag.org/wp-content/uploads/2015/04/Evaluation_of_the_Database_KMB-2014.pdf), has performed a near-complete census of the killings, providing N=10401 as a useful ground truth benchmark.
+
+![](../output/kosovo.png){width=40%}
+
+Our posterior distributions are qualitatively similar to the R LCMCR model, and our model estimates the true number of killings with slightly smaller posterior 95% CI and SD.
+
+```{r}
+summaries <- read.csv(here("write", "input", "summaries", "summaries.csv"))
+df_summaries_pretty <- summaries %>%
+    filter(Dataset == "kosovo" & model %in% c("R", "LCMCR_4")) %>%
+    mutate(model=recode(model, LCMCR_4="Stan", R="R")) %>%
+    arrange(model) %>%
+    select(c(model, q025, q500, q975, ci_95_length, mean, sd)) %>%
+    rename(c(
+             "2.5th percentile"=q025,
+             "median"=q500,
+             "97.5th percentile"=q975,
+             "95% CI length"=ci_95_length,
+             "SD"=sd))
+
+knitr::kable(df_summaries_pretty)
+```
+
+# Next steps
+
+HRDAG’s use of multiple systems estimation for studying human rights issues has evolved many times over the last twenty years, and our Stan implementation of LCMCR is the latest iteration. Stan allows us to expand the space of possible models that we can implement, allowing us to reach [desired future extensions](https://link.springer.com/chapter/10.1007/978-3-030-75460-0_2) much faster. In particular:
+
+- We would like the ability to impute missing data inside of the estimation routine, so that rather than occurring as a preprocessing step, the missing data imputation and the population size estimation can occur jointly.
+- Rather than stratifying the population by covariates and fitting separate models to each strata without any pooling of variance, we would like to incorporate covariates into the estimation routine directly.
+- Stan allows us to alter the priors in the model much more easily. This work enables us to explore different priors that may better reflect our actual understanding.
+- [Recent theoretical results](https://arxiv.org/pdf/2101.09304.pdf) draw attention to identifiability in capture-recapture models. We are less specifically concerned about that notion of a theoretical "structural" identifiability, however, than the more Bayesian notion of [practical identifiability](https://statmodeling.stat.columbia.edu/2022/07/29/discussion-on-identifiability-and-bayesian-inference/). Stan provides us with useful diagnostic tools for examining practical identifiability, and we will return to the topic at length in a future blog post.
+
+Lastly, although we have confirmed that our Stan model behaves comparably to the R implementation on some simulated and empirical examples, we still need to examine their comparative behavior on more complicated, real-world data. Our Stan implementations and these experiments are available on Github with a GPL license at [github.com/HRDAG/StanLCMCR](https://github.com/HRDAG/StanLCMCR).

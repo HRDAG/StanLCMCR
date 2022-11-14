@@ -1,20 +1,21 @@
 ---
 seed: 100
 datasets:
-  - kosovo
-  - sim1
-  - sim2
-  - sim3
-  - sim4
-  - sim5
+  - anonymized-colombia
+  #- kosovo
+  #- sim1
+  #- sim2
+  #- sim3
+  #- sim4
+  #- sim5
 models:
-  - LCMCR
-  - LCMCR_2
-  - LCMCR_3
+  #- LCMCR
+  #- LCMCR_2
+  #- LCMCR_3
   - LCMCR_4
 settings:
-  K: 10
-  n_iters: 2000
+  K: 20
+  n_iters: 5000
   chains: 4
   warmup: 2000
   adapt_delta: 0.8
@@ -23,16 +24,16 @@ R_settings:
   b_alpha: 0.25
   buffer_size: 10000
   thinning: 100
-  K: 10
+  K: 20
   trace: FALSE
   burnin: 10000
-  n_iters: 2000
+  n_iters: 10000
 alpha_sweep:
   dataset: sim5
   model: LCMCR_5_fixed_alpha
   alphas:
-    - 0.1
-    - 0.5
-    - 1
-    - 2
-    - 10
+    #- 0.1
+    #- 0.5
+    #- 1
+    #- 2
+    #- 10

@@ -1,17 +1,52 @@
 ---
 seed: 100
-models:
-  - LCMCR
-  - LCMCR_2
-  - LCMCR_3
-  - LCMCR_4
 datasets:
-  - kosovo
-  - sim1
-  - sim2
-  - sim3
-  - sim4
-  - sim5
+  -
+    name: anonymized-colombia
+    models:
+      - LCMCR_4
+  -
+    name: kosovo
+    models:
+    - LCMCR
+    - LCMCR_2
+    - LCMCR_3
+    - LCMCR_4
+  - 
+    name: sim1
+    models:
+    - LCMCR
+    - LCMCR_2
+    - LCMCR_3
+    - LCMCR_4
+  - 
+    name: sim2
+    models:
+    - LCMCR
+    - LCMCR_2
+    - LCMCR_3
+    - LCMCR_4
+  - 
+    name: sim3
+    models:
+    - LCMCR
+    - LCMCR_2
+    - LCMCR_3
+    - LCMCR_4
+  - 
+    name: sim4
+    models:
+    - LCMCR
+    - LCMCR_2
+    - LCMCR_3
+    - LCMCR_4
+  - 
+    name: sim5
+    models:
+    - LCMCR
+    - LCMCR_2
+    - LCMCR_3
+    - LCMCR_4
 alpha_sweep:
   model: LCMCR_5_fixed_alpha
   dataset: sim5

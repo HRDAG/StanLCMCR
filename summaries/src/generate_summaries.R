@@ -2,7 +2,6 @@ library(pacman)
 pacman::p_load(here, LCMCR, cmdstanr, yaml, tidyverse)
 
 summaries_spec <- read_yaml(here("summaries", "hand", "summaries.yaml"))
-model_names <- summaries_spec$models
 dataset_names <- summaries_spec$datasets
 
 ###############################################
@@ -13,9 +12,11 @@ df_divergences <- data.frame(num.divergent=numeric(), prop.divergent=numeric(), 
 df_estimates <- data.frame(estimates=numeric(), model=character(), Dataset=character())
 
 for (j in 1:length(dataset_names)) {
-    dataset_name <- dataset_names[j]
+    dataset <- dataset_names[[j]]
+    dataset_name <- dataset$name
     R_estimates <- readRDS(here("summaries", "input", paste("R_", dataset_name, "_estimates.rds", sep="")))
     df_estimates <- bind_rows(df_estimates, tibble(estimates=R_estimates, model="R", Dataset=dataset_name))
+    model_names <- dataset$models
 
     for (i in 1:length(model_names)) {
         model_name <- model_names[i]
