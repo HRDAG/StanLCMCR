@@ -15,5 +15,6 @@ for (i in 1:length(datasets)) {
     df <- read.delim(here("import", "input", dataset$filename), sep=dataset$delimiter)
     df %>% select(dataset$list_names) %>%
         select_if(function(col) length(unique(col)) > 1) %>%
+        mutate(across(where(is.character), function(x) {as.numeric(as.logical(x))})) %>%
         write.csv(here("import", "output", paste(dataset$name, ".csv", sep="")), row.names=FALSE)
 }

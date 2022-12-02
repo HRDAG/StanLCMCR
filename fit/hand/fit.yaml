@@ -12,7 +12,8 @@ models:
   #- LCMCR
   #- LCMCR_2
   #- LCMCR_3
-  - LCMCR_4
+  #- LCMCR_4
+  - LCMCR_6
 settings:
   K: 20
   n_iters: 5000

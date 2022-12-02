@@ -179,17 +179,29 @@ ggsave(here("write", "output", "kosovo.png"), height=4, width=4)
 
 estimates_all %>%
   filter(Dataset == "anonymized-colombia") %>%
-  filter(model %in% c("R", "LCMCR_4")) %>%
-  mutate(model = recode_factor(model, R="R", LCMCR = "Stan (v1)", LCMCR_4 = "Stan (v4)")) %>%
+  filter(model %in% c("R", "LCMCR_4", "LCMCR_6")) %>%
+  mutate(model = recode_factor(model, R="R", LCMCR_4 = "Stan (uniform)", LCMCR_6 = "Stan (non-uniform)")) %>%
   ggplot() +
     geom_density(aes(x = estimates, fill = model), alpha = 0.25) +
     theme_minimal() +
-    labs(x="Estimated population size", y="Density", title="Colombia (no stratification)") +
+    labs(x="Estimated population size", y="Density", title="Colombia (dept=5, hecho=2000)") +
     scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
     theme(legend.position = "top") 
 
-ggsave(here("write", "output", "colombia.png"), height=4, width=4)
+ggsave(here("write", "output", "colombia-R-vs-stan.png"), height=4, width=4)
 
+estimates_all %>%
+  filter(Dataset == "anonymized-colombia") %>%
+  filter(model %in% c("R", "LCMCR_6")) %>%
+  mutate(model = recode_factor(model, R="R", LCMCR_4 = "Stan (uniform)", LCMCR_6 = "Stan (non-uniform)")) %>%
+  ggplot() +
+    geom_density(aes(x = estimates, fill = model), alpha = 0.25) +
+    theme_minimal() +
+    labs(x="Estimated population size", y="Density", title="Colombia (dept=5, hecho=2000)") +
+    scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
+    theme(legend.position = "top") 
+
+ggsave(here("write", "output", "colombia-R-vs-stan-non-uniform.png"), height=4, width=4)
 
 
 ###############################################

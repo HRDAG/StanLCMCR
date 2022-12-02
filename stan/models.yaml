@@ -24,3 +24,8 @@ models:
     name: LCMCR_5_fixed_alpha
     description: >
       The same as LCMCR3, except alpha is fixed in the data block.
+  -
+    name: LCMCR_6
+    description: >
+      The same as LCMCR4, except the prior for lambda is non-uniform
+      and determined by our prior calculation program

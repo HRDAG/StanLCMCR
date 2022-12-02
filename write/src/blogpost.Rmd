@@ -96,6 +96,7 @@ knitr::kable(df_table)
 We fit models to these examples using 1000 iterations and K=10 maximum latent classes. For Stan, we used four chains and 2000 warmup iterations. For the R LCMCR implementation, we used a buffer size of 10000, `thinning=100`, `a_alpha=b_alpha=0.25`, with a burn-in of 10000 iterations.
 
 However, we notice two problems immediately:
+
 1. The effective sample size and split R-hat diagnostics for several of the variables are unacceptably high.
 2. The number of divergences reported by Hamiltonian Monte Carlo are unacceptably high (often around 30% of iterations are divergent).
 
@@ -124,10 +125,11 @@ Although we could fix the divergent transitions issue by hard-coding alpha (and 
 We address this through several approaches: first, we reparameterize the stick-breaking code using a logarithmic scale, to make the model more numerically stable. Second, since the issue arises when alpha is very small, we replace the gamma(0.5, 0.5) prior on alpha with a boundary-avoiding lognormal(0, 0.25) prior.  The lognormal(0, 0.25) prior has a similar mean (1.03, versus 1 from gamma(0.25, 0.25)), and conveniently prevents alpha from reaching values that are too small. Moreover, it is more symmetric on the log-scale and therefore [more computationally friendly](https://discourse.mc-stan.org/t/sampling-from-the-prior-why-am-i-seeing-divergent-transitions/25407/6) to Stan’s adaptive warm-up.
 
 Overall, we have reduced the divergences significantly from the starting model, where:
-- Model 1 = original model
-- Model 2 = Model 1 + fixed label switching
-- Model 3 = Model 2 + logarithmic stick-breaking
-- Model 4 = Model 3 + boundary-avoiding prior for alpha
+
+* Model 1 = original model
+* Model 2 = Model 1 + fixed label switching
+* Model 3 = Model 2 + logarithmic stick-breaking
+* Model 4 = Model 3 + boundary-avoiding prior for alpha
 
 ![](../output/divergences-by-model.png){width=55%}
 

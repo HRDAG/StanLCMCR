@@ -5,6 +5,7 @@ datasets:
     name: anonymized-colombia
     models:
       - LCMCR_4
+      - LCMCR_6
   -
     name: kosovo
     models:
