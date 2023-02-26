@@ -9,6 +9,10 @@ if (!require("cmdstanr")) {
   pacman::p_load(cmdstanr)
 }
 
+# Don't generate Rplots.pdf
+pdf(NULL)
+
+# This was a hack: better to read from hand.yaml
 fns <- Sys.glob(here("write", "input", "fit", "LCMCR_*.rds")) 
 
 path <- fns[[1]]
@@ -82,7 +86,7 @@ write.csv(traces_all, here("write", "output", "diagnostics", "traces.csv"), row.
 
 ggplot(traces_all) +
     geom_point(aes(x=iteration,y=Freq), alpha=0.3) +
-    facet_grid(sort_name + model_id ~ chain, scales="free_y") +
+    facet_grid(sort_name + model_id ~ chain, scales="free") +
     labs(x="Iteration", y="Value")
 
 ggsave(here("write", "output", "diagnostics", "traceplots.pdf"), height=2 * length(fns), width=7, limitsize=FALSE)

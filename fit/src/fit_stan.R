@@ -22,6 +22,8 @@ fit_stan <- function(model, data, K=10, num_iter=2000, seed=19481210, chains=4, 
                          alpha = alpha 
                          ) %>%
     compact()
+
+  print(stan_data_list)
   
   fit <- model$sample(data = stan_data_list,
                                 seed = seed,

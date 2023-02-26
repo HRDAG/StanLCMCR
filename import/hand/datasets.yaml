@@ -1,10 +1,7 @@
 ---
-data:
+families:
   -
-    name: anonymized-colombia
-    filename: dept-5-hecho-2000-R1.csv
-    description: One stratum of the CO data for one replicate (dept code = 5, year = 2000)
-    delimiter: ","
+    name: colombia
     list_names:
       - in_ruv
       - in_vp_das
@@ -40,3 +37,24 @@ data:
       - in_ccj
       - in_cceeu
       - in_arn
+    data:
+      -
+        name: anonymized-colombia-strata-0
+        filename: dept-5-hecho-2000-R1.csv
+        description: Test stratum of the CO data for one replicate = strata_0, dept code_5, year_2000
+        delimiter: ","
+      -
+        name: anonymized-colombia-strata-12
+        filename: co_12_2009_76.csv
+        description: One stratum of the CO data for one replicate = strata_12, dept code_76, year_2009
+        delimiter: ","
+      -
+        name: anonymized-colombia-strata-3
+        filename: co_3_2003_5_mujer_para.csv
+        description: One stratum of the CO data from one replicate = strata_3, dept code_5, year_2003, sexo_mujer, perp_PARA
+        delimiter: ","
+      -
+        name: anonymized-colombia-strata-1
+        filename: co_1_2002_5_mujer.csv
+        description: One stratum of the CO data from one replicate = strata_1, dept code_5, year_2002, sexo_mujer
+        delimiter: ","

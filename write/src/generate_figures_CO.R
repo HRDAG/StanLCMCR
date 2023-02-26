@@ -12,14 +12,15 @@ if (!require("cmdstanr")) {
 summaries_all <- read.csv(here("write", "input", "summaries", "summaries.csv")) 
 estimates_all <- read.csv(here("write", "input", "summaries", "estimates.csv")) 
 
-summaries_alpha_sweep <- read.csv(here("write", "input", "summaries", "summaries_alphas.csv"))
+fit_model6_co1 <- readRDS(here("write", "input", "fit", "LCMCR_6_anonymized-colombia-strata-1.rds"))
+fit_model7_co1 <- readRDS(here("write", "input", "fit", "LCMCR_7_anonymized-colombia-strata-1.rds"))
 
-fit_model1_dataset1 <- readRDS(here("write", "input", "fit", "LCMCR_sim1.rds"))
-fit_model2_dataset1 <- readRDS(here("write", "input", "fit", "LCMCR_2_sim1.rds"))
-fit_model4_dataset1 <- readRDS(here("write", "input", "fit", "LCMCR_4_sim1.rds"))
+fit_model4_co3 <- readRDS(here("write", "input", "fit", "LCMCR_4_anonymized-colombia-strata-3.rds"))
+fit_model6_co3 <- readRDS(here("write", "input", "fit", "LCMCR_6_anonymized-colombia-strata-3.rds"))
+fit_model7_co3 <- readRDS(here("write", "input", "fit", "LCMCR_7_anonymized-colombia-strata-3.rds"))
 
-summaries <- summaries_all %>% filter(Dataset != "kosovo")
-estimates <- estimates_all %>% filter(Dataset != "kosovo")
+summaries <- summaries_all %>% filter(grepl("anonymized-colombia-strata-", Dataset))
+estimates <- estimates_all %>% filter(grepl("anonymized-colombia-strata-", Dataset))
 
 # Needed to prevent generating Rplots.pdf in current working directory
 pdf(NULL)
@@ -30,10 +31,7 @@ pdf(NULL)
 
 summaries %>%
   filter(model != "R") %>%
-  mutate(model = recode_factor(model, LCMCR="LCMCR_1")) %>%
   mutate(model_ix = as.numeric(substr(model, 7, 7))) %>%
-  filter(substr(Dataset, 1, 3) == "sim") %>%
-  filter(model_ix <= 4) %>%
   ggplot() +
     geom_point(aes(x=model_ix, y=prop.divergent, color=Dataset), size=2) +
     geom_line(aes(x=model_ix, y=prop.divergent, color=Dataset), linetype="dashed") +
@@ -41,7 +39,7 @@ summaries %>%
   theme(legend.position = "top") +
   scale_y_continuous(labels = scales::percent)
 
-ggsave(here("write", "output", "divergences-by-model.png"), width=5, height=5)
+ggsave(here("write", "output", "divergences-by-model-co.png"), width=5, height=5)
     
 
 ###############################################
@@ -49,37 +47,33 @@ ggsave(here("write", "output", "divergences-by-model.png"), width=5, height=5)
 ###############################################
 
 summaries %>%
-  filter(model %in% c("R", "LCMCR", "LCMCR_4")) %>%
-  filter(substr(Dataset, 1, 3) == "sim") %>%
-  mutate(model = recode_factor(model, R="R", LCMCR = "Stan (v1)", LCMCR_4 = "Stan (v4)")) %>%
+  mutate(model = recode_factor(model, R="R", LCMCR_4 = "Unif. priors", LCMCR_6 = "Fixed priors", LCMCR_7 = "Fixed (no swap)")) %>%
   ggplot() +
   geom_point(aes(x=Dataset, y=q500, group=model, color=model), position=position_dodge(width=0.5)) +
   geom_errorbar(aes(x=Dataset, ymin=q025, ymax=q975, group=model, color=model), width=0.5, position="dodge") +
-  geom_hline(yintercept=2000, linetype="dotted") +
+#  geom_hline(yintercept=2000, linetype="dotted") +
   labs(y="Estimates with medians and 95% CIs") +
   theme(legend.position="bottom")
 
-ggsave(here("write", "output", "posterior-CIs.png"), width=5, height=4)
+ggsave(here("write", "output", "posterior-CIs-CO.png"), width=5, height=4)
 
 ###############################################
 # Plot posterior densities
 ###############################################
 
 estimates %>%
-  filter(model %in% c("R", "LCMCR", "LCMCR_4")) %>%
-  filter(substr(Dataset, 1, 3) == "sim") %>%
-  mutate(model = recode_factor(model, R="R", LCMCR = "Stan (v1)", LCMCR_4 = "Stan (v4)")) %>%
+  mutate(model = recode_factor(model, R="R", LCMCR_6 = "Fixed priors", LCMCR_7 = "Fixed (no swap)")) %>%
+  filter(model != "LCMCR_4") %>%
   ggplot() +
     geom_density(aes(x = estimates, fill = model), alpha = 0.25) +
     theme_minimal() +
     xlab("Estimated population size") +
     ylab("Density") +
     scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple")) +
-    geom_vline(xintercept=2000, linetype="dashed") +
     facet_wrap(~ Dataset, scales = "free", ncol=1) +
     theme(legend.position = "top")
   
-ggsave(here("write", "output", "posterior-densities.png"), height=7, width=4)
+ggsave(here("write", "output", "posterior-densities-CO.png"), height=7, width=4)
 
 ###############################################
 # Plot label-switching fix
@@ -100,31 +94,19 @@ plot.chain.diagnostics.grid <- function(stan_fit, varnames, title="") {
 }
 
 pis = c("pi[1]", "pi[2]", "pi[3]", "pi[4]") # Probability of belonging to the first four latent classes
+lambdas = c("lambda[1,1]", "lambda[1,2]", "lambda[1,3]", "lambda[1,4]") # Probability of belonging to the first four latent classes
+#lambdas = c("lambda[1,1]", "lambda[2,1]", "lambda[3,1]", "lambda[4,1]") # Probability of belonging to the first four latent classes
 
-plot.chain.diagnostics.grid(fit_model1_dataset1, pis)
-ggsave(here("write", "output", "label-switching-stan1.png"), height=6, width=7)
+plot.chain.diagnostics.grid(fit_model6_co1, pis)
+ggsave(here("write", "output", "label-switching-stan6-co1.png"), height=6, width=7)
 
-plot.chain.diagnostics.grid(fit_model2_dataset1, pis)
-ggsave(here("write", "output", "label-switching-stan2.png"), height=6, width=7)
+plot.chain.diagnostics.grid(fit_model7_co1, pis)
+ggsave(here("write", "output", "label-switching-stan7-co1.png"), height=6, width=7)
 
-
-###############################################
-# Prior-posterior plot of alpha in 4th model
-###############################################
-
-# Prior vs. posterior of alpha
-as.data.frame(fit_model4_dataset1$draws(c("alpha"))) %>%
-  pivot_longer(cols=c("1.alpha", "2.alpha", "3.alpha", "4.alpha")) %>%
-  ggplot() +
-    geom_density(aes(x=value, color="posterior", linetype="posterior")) +
-    geom_density(data=data.frame(x=exp(rnorm(5000, mean=0, sd=0.25))), aes(x=x, color="prior", linetype="prior")) +
-    scale_color_manual(values=c("prior"="red", "posterior"="blue"), name="") +
-    scale_linetype_manual(values=c("prior"="solid", "posterior"="dashed"), name="") +
-    labs(x="alpha") +
-    theme(legend.position = "bottom")
-
-ggsave(here("write", "output", "alpha-prior-posterior.png"), width=4, height=4)
-
+plot.chain.diagnostics.grid(fit_model4_co3, pis)
+plot.chain.diagnostics.grid(fit_model4_co3, lambdas)
+plot.chain.diagnostics.grid(fit_model6_co3, lambdas)
+plot.chain.diagnostics.grid(fit_model7_co3, lambdas)
 
 ###############################################
 # Divergent transitions plot (trace plot and densities)
@@ -148,46 +130,38 @@ plot.divergent.transitions <- function(stan_fit, chain, varname) {
   plot.dens / plot.trace
 }
 
-plot.divergent.transitions(fit_model2_dataset1, 3, "alpha")
-ggsave(here("write", "output", "divergent-alpha-stan2.png"), width=4, height=4)
+plot.divergent.transitions(fit_model7_co1, 2, "pi[1]")
+ggsave(here("write", "output", "divergent-pi-stan7-co1.png"), width=4, height=4)
 
+plot.divergent.transitions(fit_model4_co3, 3, "pi[1]")
 
 ###############################################
-# Kosovo-specific density plot
+# Colombia-specific density plot
 ###############################################
 
-estimates_all %>%
-  filter(Dataset == "kosovo") %>%
-  filter(model %in% c("R", "LCMCR", "LCMCR_4")) %>%
-  mutate(model = recode_factor(model, R="R", LCMCR = "Stan (v1)", LCMCR_4 = "Stan (v4)")) %>%
+estimates %>%
+  filter(model %in% c("R", "LCMCR_4", "LCMCR_6")) %>%
+  mutate(model = recode_factor(model, R="R", LCMCR_4 = "Stan (uniform)", LCMCR_6 = "Stan (non-uniform)")) %>%
   ggplot() +
     geom_density(aes(x = estimates, fill = model), alpha = 0.25) +
     theme_minimal() +
-    labs(x="Estimated population size", y="Density", title="Kosovo") +
+    labs(x="Estimated population size", y="Density") +
     scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
-    geom_vline(xintercept=10401, linetype="dashed") +
-    theme(legend.position = "top") 
+    theme(legend.position = "top") +
+    facet_wrap(Dataset ~ ., scales="free", ncol=1)
 
-ggsave(here("write", "output", "kosovo.png"), height=4, width=4)
+ggsave(here("write", "output", "colombia-R-vs-stan.png"), height=4, width=4)
 
 
-###############################################
-# Alpha sweeps
-###############################################
-
-(summaries_alpha_sweep %>% 
-  mutate(alpha_ordered = as.factor(alpha)) %>% #recode_factor(alpha, 0.1="0.1", 0.5="0.5", 1="1", 2="2", 10="10")) %>%
+estimates %>%
+  filter(model %in% c("LCMCR_6", "LCMCR_7")) %>%
+  mutate(model = recode_factor(model, LCMCR_6 = "Stan (reordering)", LCMCR_7 = "Stan (no reordering)")) %>%
   ggplot() +
-    geom_point(aes(x=alpha_ordered, y=prop.divergent), size=2) +
-    labs(x="alpha", y="% divergent") +
-    scale_y_continuous(labels = scales::percent)) /
-(summaries_alpha_sweep %>% 
-  mutate(alpha_ordered = as.factor(alpha)) %>% #recode_factor(alpha, 0.1="0.1", 0.5="0.5", 1="1", 2="2", 10="10")) %>%
-  ggplot() +
-  geom_point(aes(x=alpha_ordered, y=q500)) +
-  geom_errorbar(aes(x=alpha_ordered, ymin=q025, ymax=q975), width=0.5) +
-  geom_hline(yintercept=2000, linetype="dotted") +
-  labs(x="alpha", y="Estimates with medians and 95% CIs"))
+    geom_density(aes(x = estimates, fill = model), alpha = 0.25) +
+    theme_minimal() +
+    labs(x="Estimated population size", y="Density") +
+    scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
+    theme(legend.position = "top") +
+    facet_wrap(Dataset ~ ., scales="free", ncol=1)
 
-ggsave(here("write", "output", "divergences-alpha-sweep.png"), width=4, height=6)
-
+ggsave(here("write", "output", "colombia-R-vs-stan-non-uniform.png"), height=4, width=4)

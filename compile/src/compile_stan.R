@@ -1,5 +1,10 @@
 library(pacman)
-pacman::p_load(here, cmdstanr, yaml)
+pacman::p_load(here, yaml)
+
+if (!require("cmdstanr")) {
+  install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+  pacman::p_load(cmdstanr)
+}
 
 models_metadata <- read_yaml(here("compile", "hand", "models.yaml"))
 

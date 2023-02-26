@@ -1,19 +1,24 @@
 ---
 seed: 100
 datasets:
-  - anonymized-colombia
+  # - anonymized-colombia-strata-0
+  - anonymized-colombia-strata-1
+  # - anonymized-colombia-strata-3
+  - anonymized-colombia-strata-12
   #- kosovo
   #- sim1
   #- sim2
   #- sim3
   #- sim4
   #- sim5
+  #- sim1_wide
 models:
   #- LCMCR
   #- LCMCR_2
   #- LCMCR_3
   #- LCMCR_4
   - LCMCR_6
+  #- LCMCR_7
 settings:
   K: 20
   n_iters: 5000

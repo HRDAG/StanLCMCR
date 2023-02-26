@@ -29,3 +29,8 @@ models:
     description: >
       The same as LCMCR4, except the prior for lambda is non-uniform
       and determined by our prior calculation program
+  -
+    name: LCMCR_7
+    description: >
+      The same as LCMCR6, except we no longer reorder based on
+      group size (undoing LCMCR_2 essentially)

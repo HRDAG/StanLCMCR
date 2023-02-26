@@ -1,11 +1,29 @@
 ---
 seed: 100
 datasets:
+  #-
+  #  name: anonymized-colombia-strata-0
+  #  models:
+  #    - LCMCR_4
+  #    - LCMCR_6
   -
-    name: anonymized-colombia
+    name: anonymized-colombia-strata-1
     models:
       - LCMCR_4
       - LCMCR_6
+      - LCMCR_7
+  -
+    name: anonymized-colombia-strata-3
+    models:
+      - LCMCR_4
+      - LCMCR_6
+      - LCMCR_7
+  -
+    name: anonymized-colombia-strata-12
+    models:
+      - LCMCR_4
+      - LCMCR_6
+      - LCMCR_7
   -
     name: kosovo
     models:
