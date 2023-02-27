@@ -12,6 +12,8 @@ data {
   int list_indicators[C, J]; // indicators of being in lists
   vector<lower=0>[C] cell_count; // cell count for each capture pattern
   int<lower=1> K; // number of latent classes
+  real<lower=0> a; // a parameter for the lambda priors
+  real<lower=0> b; // b parameter for the lambda priors
 }
 
 
@@ -71,7 +73,7 @@ model {
   
   for (k in 1:K) {
       // Parameters correspond to expansion factor quantiles of 1.01 to 5 for J=33 lists
-      lambda[k] ~ beta(0.061, 1.601);
+      lambda[k] ~ beta(a, b);
   }
   breaks ~ beta(1, alpha);
   alpha ~ lognormal(0, 0.25);

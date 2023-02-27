@@ -12,6 +12,7 @@ if (!require("cmdstanr")) {
 summaries_all <- read.csv(here("write", "input", "summaries", "summaries.csv")) 
 estimates_all <- read.csv(here("write", "input", "summaries", "estimates.csv")) 
 
+fit_model4_co1 <- readRDS(here("write", "input", "fit", "LCMCR_4_anonymized-colombia-strata-1.rds"))
 fit_model6_co1 <- readRDS(here("write", "input", "fit", "LCMCR_6_anonymized-colombia-strata-1.rds"))
 fit_model7_co1 <- readRDS(here("write", "input", "fit", "LCMCR_7_anonymized-colombia-strata-1.rds"))
 
