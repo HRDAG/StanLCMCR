@@ -1,0 +1,352 @@
+---
+strata:
+  -
+    stratum: g1
+    good: true
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      dept_code_hecho: 5
+      sexo: MUJER
+  -
+    stratum: g2
+    good: true
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      dept_code_hecho: 5
+      sexo: HOMBRE
+  -
+    stratum: g3
+    good: true
+    criteria:
+      yy_hecho_start: 2003
+      yy_hecho_end: 2003
+      dept_code_hecho: 5
+      sexo: MUJER
+      p_str: PARA
+  -
+    stratum: g4
+    good: true
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      dept_group_hecho: BOLIVAR_SUCRE_CORDOBA
+      sexo: HOMBRE
+      p_str: PARA
+  -
+    stratum: g5
+    good: true
+    criteria:
+      yy_hecho_start: 1999
+      yy_hecho_end: 1999
+      dept_group_hecho: ATLANTICO_MAGDALENA_CESAR_LA_GUAJIRA
+      sexo: HOMBRE
+      p_str: PARA
+  -
+    stratum: g6
+    good: true
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      dept_group_hecho: AMAZONAS_VAPUES_GUAVIARE_GUAINIA
+      sexo: HOMBRE
+      p_str: GUE-FARC
+  -
+    stratum: g7
+    good: true
+    criteria:
+      yy_hecho_start: 2000
+      yy_hecho_end: 2004
+      pert_etnica: pueblo_etnico
+      region_onic: Amazonia
+      p_str: GUE-FARC
+  -
+    stratum: g8
+    good: true
+    criteria:
+      yy_hecho_start: 1995
+      yy_hecho_end: 1999
+      pert_etnica: pueblo_etnico
+      region_onic: Occidente
+      p_str: PARA
+  -
+    stratum: g9
+    good: true
+    criteria:
+      yy_hecho_start: 1995
+      yy_hecho_end: 1999
+      pert_etnica: pueblo_etnico
+      region_onic: Occidente
+      p_str: GUE-FARC
+  -
+    stratum: g10
+    good: true
+    criteria:
+      yy_hecho_start: 1999
+      yy_hecho_end: 1999
+      dept_code_hecho: 5
+  -
+    stratum: g11
+    good: true
+    criteria:
+      yy_hecho_start: 2007
+      yy_hecho_end: 2007
+      dept_code_hecho: 47
+  -
+    stratum: g12
+    good: true
+    criteria:
+      yy_hecho_start: 2009
+      yy_hecho_end: 2009
+      dept_code_hecho: 76
+  -
+    stratum: g13
+    good: true
+    criteria:
+      yy_hecho_start: 1999
+      yy_hecho_end: 1999
+      p_str: PARA
+  -
+    stratum: g14
+    good: true
+    criteria:
+      yy_hecho_start: 1989
+      yy_hecho_end: 1989
+      p_str: GUE-FARC
+  -
+    stratum: g15
+    good: true
+    criteria:
+      yy_hecho_start: 2010
+      yy_hecho_end: 2010
+      p_str: EST
+  -
+    stratum: g16
+    good: true
+    criteria:
+      yy_hecho_start: 1990
+      yy_hecho_end: 1990
+      p_str: GUE-FARC
+  -
+    stratum: g17
+    good: true
+    criteria:
+      yy_hecho_start: 2013
+      yy_hecho_end: 2013
+      p_str: GUE-FARC
+  -
+    stratum: g18
+    good: true
+    criteria:
+      yy_hecho_start: 2006
+      yy_hecho_end: 2006
+      p_str: PARA
+      edad_cat: ADULTO
+  -
+    stratum: g19
+    good: true
+    criteria:
+      yy_hecho_start: 2008
+      yy_hecho_end: 2008
+      p_str: GUE-FARC
+      edad_cat: MENOR
+  -
+    stratum: g20
+    good: true
+    criteria:
+      yy_hecho_start: 1995
+      yy_hecho_end: 1999
+      dept_code_hecho: 50
+      p_str: PARA
+  -
+    stratum: g21
+    good: true
+    criteria:
+      yy_hecho_start: 2000
+      yy_hecho_end: 2004
+      dept_code_hecho: 50
+      p_str: PARA
+  -
+    stratum: g22
+    good: true
+    criteria:
+      yy_hecho_start: 1995
+      yy_hecho_end: 1999
+      dept_code_hecho: 54
+      p_str: PARA
+  -
+    stratum: g23
+    good: true
+    criteria:
+      yy_hecho_start: 1995
+      yy_hecho_end: 1999
+      dept_code_hecho: 54
+      p_str: EST
+  -
+    stratum: g24
+    good: true
+    criteria:
+      yy_hecho_start: 1995
+      yy_hecho_end: 1999
+      dept_code_hecho: 54
+      p_str: GUE-ELN
+  -
+    stratum: b1
+    good: false
+    criteria:
+      yy_hecho_start: 1964
+      yy_hecho_end: 1970
+      dept_code_hecho: 91
+      p_str: GUE-FARC
+  -
+    stratum: b2
+    good: false
+    criteria:
+      yy_hecho_start: 1964
+      yy_hecho_end: 1970
+      dept_code_hecho: 41
+      p_str: EST
+  -
+    stratum: b3
+    good: false
+    criteria:
+      yy_hecho_start: 1974
+      yy_hecho_end: 1978
+      dept_code_hecho: 15
+      p_str: GUE-FARC
+  -
+    stratum: b4
+    good: false
+    criteria:
+      yy_hecho_start: 1974
+      yy_hecho_end: 1978
+      dept_code_hecho: 11
+      p_str: GUE-FARC
+  -
+    stratum: b5
+    good: false
+    criteria:
+      yy_hecho_start: 1976
+      yy_hecho_end: 1983
+      muni_code_hecho: 50370
+      p_str: GUE-FARC
+  -
+    stratum: b6
+    good: false
+    criteria:
+      yy_hecho_start: 1984
+      yy_hecho_end: 1990
+      muni_code_hecho: 50330
+      p_str: PARA
+  -
+    stratum: b7
+    good: false
+    criteria:
+      yy_hecho_start: 1976
+      yy_hecho_end: 1983
+      muni_code_hecho: 18753
+      p_str: EST
+  -
+    stratum: b8
+    good: false
+    criteria:
+      yy_hecho_start: 1984
+      yy_hecho_end: 1990
+      muni_code_hecho: 76001
+      p_str: GUE-ELN
+  -
+    stratum: b9
+    good: false
+    criteria:
+      yy_hecho_start: 1976
+      yy_hecho_end: 1983
+      muni_code_hecho: 25743
+      p_str: PARA
+  -
+    stratum: b10
+    good: false
+    criteria:
+      yy_hecho_start: 2005
+      yy_hecho_end: 2009
+      p_str: GUE-FARC
+  -
+    stratum: b11
+    good: false
+    criteria:
+      yy_hecho_start: 2005
+      yy_hecho_end: 2009
+      p_str: PARA
+  -
+    stratum: b12
+    good: false
+    criteria:
+      yy_hecho_start: 1990
+      yy_hecho_end: 1994
+      p_str: EST
+  -
+    stratum: b13
+    good: false
+    criteria:
+      yy_hecho_start: 1990
+      yy_hecho_end: 1994
+      p_str: GUE-FARC
+  -
+    stratum: b14
+    good: false
+    criteria:
+      yy_hecho_start: 1979
+      yy_hecho_end: 1979
+      muni_code_hecho: 95025
+      p_str: GUE-FARC
+      etnia: NARP
+  -
+    stratum: b15
+    good: false
+    criteria:
+      yy_hecho_start: 1993
+      yy_hecho_end: 1993
+      muni_code_hecho: 47001
+      p_str: GUE-FARC
+      etnia: MESTIZO
+  -
+    stratum: b16
+    good: false
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      muni_code_hecho: 15690
+      p_str: PARA
+      etnia: INDIGENA
+  -
+    stratum: b17
+    good: false
+    criteria:
+      yy_hecho_start: 2007
+      yy_hecho_end: 2007
+      muni_code_hecho: 11001
+      p_str: GUE-FARC
+      etnia: NARP
+  -
+    stratum: b18
+    good: false
+    criteria:
+      yy_hecho_start: 2010
+      yy_hecho_end: 2010
+      muni_code_hecho: 20060
+      p_str: PARA
+      etnia: INDIGENA
+  -
+    stratum: b19
+    good: false
+    criteria:
+      yy_hecho_start: 1995
+      yy_hecho_end: 1999
+      sexo: MUJER
+  -
+    stratum: b20
+    good: false
+    criteria:
+      yy_hecho_start: 2005
+      yy_hecho_end: 2009
+      sexo: MUJER
