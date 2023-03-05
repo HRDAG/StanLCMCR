@@ -2,6 +2,8 @@ library(pacman)
 
 pacman::p_load(here, tidyverse, scales, patchwork)
 
+theme_set(theme_minimal())
+
 # cmdstanR needed for trace plots
 # also, custom repository
 if (!require("cmdstanr")) {
@@ -52,6 +54,7 @@ summaries %>%
   ggplot() +
   geom_point(aes(x=Dataset, y=q500, group=model, color=model), position=position_dodge(width=0.5)) +
   geom_errorbar(aes(x=Dataset, ymin=q025, ymax=q975, group=model, color=model), width=0.5, position="dodge") +
+  geom_point(aes(x=Dataset, y=q500/q500_expfac), size=3, shape=3) +
 #  geom_hline(yintercept=2000, linetype="dotted") +
   labs(y="Estimates with medians and 95% CIs") +
   theme(legend.position="bottom")
@@ -59,15 +62,34 @@ summaries %>%
 ggsave(here("write", "output", "posterior-CIs-CO.png"), width=5, height=4)
 
 ###############################################
+# Plot posterior densities (expansion factors)
+###############################################
+
+estimates %>%
+#  mutate(model = recode_factor(model, R="R", LCMCR_6 = "Fixed priors", LCMCR_7 = "Fixed (no swap)")) %>%
+  filter(model != "LCMCR_4") %>%
+  ggplot() +
+    geom_density(aes(x = expfacs, fill = model), alpha = 0.25) +
+    
+    xlab("Estimated expansion factor") +
+    ylab("Density") +
+    scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple")) +
+    facet_wrap(~ Dataset, scales = "free", ncol=1) +
+    theme(legend.position = "top")
+  
+ggsave(here("write", "output", "posterior-expfac-densities-CO.png"), height=7, width=4)
+
+###############################################
 # Plot posterior densities
 ###############################################
 
 estimates %>%
-  mutate(model = recode_factor(model, R="R", LCMCR_6 = "Fixed priors", LCMCR_7 = "Fixed (no swap)")) %>%
+#  mutate(model = recode_factor(model, R="R", LCMCR_6 = "Fixed priors", LCMCR_7 = "Fixed (no swap)")) %>%
   filter(model != "LCMCR_4") %>%
   ggplot() +
     geom_density(aes(x = estimates, fill = model), alpha = 0.25) +
-    theme_minimal() +
+    geom_vline(data=summaries %>% filter(model != "LCMCR_4"), mapping=aes(xintercept=q500/q500_expfac)) +
+    
     xlab("Estimated population size") +
     ylab("Density") +
     scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple")) +
@@ -145,7 +167,6 @@ estimates %>%
   mutate(model = recode_factor(model, R="R", LCMCR_4 = "Stan (uniform)", LCMCR_6 = "Stan (non-uniform)")) %>%
   ggplot() +
     geom_density(aes(x = estimates, fill = model), alpha = 0.25) +
-    theme_minimal() +
     labs(x="Estimated population size", y="Density") +
     scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
     theme(legend.position = "top") +
@@ -153,16 +174,34 @@ estimates %>%
 
 ggsave(here("write", "output", "colombia-R-vs-stan.png"), height=4, width=4)
 
-
 estimates %>%
   filter(model %in% c("LCMCR_6", "LCMCR_7")) %>%
   mutate(model = recode_factor(model, LCMCR_6 = "Stan (reordering)", LCMCR_7 = "Stan (no reordering)")) %>%
   ggplot() +
     geom_density(aes(x = estimates, fill = model), alpha = 0.25) +
-    theme_minimal() +
     labs(x="Estimated population size", y="Density") +
     scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
     theme(legend.position = "top") +
     facet_wrap(Dataset ~ ., scales="free", ncol=1)
 
 ggsave(here("write", "output", "colombia-R-vs-stan-non-uniform.png"), height=4, width=4)
+
+###############################################
+# Colombia-specific plot of expansion factors
+###############################################
+
+summaries %>%
+  mutate(model = recode_factor(model, R="R", LCMCR_4="Stan (unif)", LCMCR_6 = "Stan (priors/reorder)", LCMCR_7 = "Stan (priors/no-reorder)")) %>%
+  ggplot() +
+    geom_point(aes(x = q025_expfac, y=model)) +
+    geom_point(aes(x = q975_expfac, y=model)) +
+    geom_point(aes(x = q500_expfac, y=model), shape=1) +
+    geom_segment(aes(x = q025_expfac, xend=q975_expfac, y=model, yend=model)) +
+    scale_y_discrete(limits=rev) +
+    labs(x="Expansion factor", y="") +
+    scale_color_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
+    theme(legend.position = "top") +
+    facet_wrap(Dataset ~ ., scales="free", ncol=1)
+
+ggsave(here("write", "output", "expansion-factors-CO.png"), height=6, width=4)
+
