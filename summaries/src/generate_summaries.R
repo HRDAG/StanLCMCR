@@ -19,10 +19,14 @@ for (j in 1:length(dataset_names)) {
 
     # We're just going to count the lines on the original dataset, and subtract one for the header, rather than read the whole thing in again
     observed <- peek_count_lines(here("summaries", "input", "import", paste(dataset_name, ".csv", sep=""))) - 1
+    
+    R_estimate_fn <- here("summaries", "input", "fit", paste("R_", dataset_name, "_estimates.rds", sep=""))
 
-    R_estimates <- readRDS(here("summaries", "input", "fit", paste("R_", dataset_name, "_estimates.rds", sep="")))
-    expfacs <- R_estimates / observed
-    df_estimates <- bind_rows(df_estimates, tibble(estimates=R_estimates, model="R", Dataset=dataset_name, expfacs=expfacs))
+    if (file.exists(R_estimate_fn)) {
+        R_estimates <- readRDS(R_estimate_fn)
+        expfacs <- R_estimates / observed
+        df_estimates <- bind_rows(df_estimates, tibble(estimates=R_estimates, model="R", Dataset=dataset_name, expfacs=expfacs))
+    }
 
     model_names <- dataset$models
 
@@ -73,6 +77,7 @@ df_estimates_alpha <- data.frame(estimates=numeric(), alpha=numeric())
 
 for (i in 1:length(alphas)) {
     alpha <- alphas[[i]]
+
     fitted <- readRDS(here("summaries", "input", "fit", paste(alpha_sweep_model, "_", alpha_sweep_dataset, "_", alpha, ".rds", sep="")))
 
     estimates_df <- as.data.frame(fitted$draws("N"))

@@ -11,19 +11,25 @@ datasets:
     models:
       - LCMCR_4
       - LCMCR_6
-      - LCMCR_7
+      - LCMCR_7_1.5
+      - LCMCR_7_3
+      - LCMCR_7_5
   -
     name: anonymized-colombia-strata-3
     models:
       - LCMCR_4
       - LCMCR_6
-      - LCMCR_7
+      - LCMCR_7_1.5
+      - LCMCR_7_3
+      - LCMCR_7_5
   -
     name: anonymized-colombia-strata-12
     models:
       - LCMCR_4
       - LCMCR_6
-      - LCMCR_7
+      - LCMCR_7_1.5
+      - LCMCR_7_3
+      - LCMCR_7_5
   -
     name: kosovo
     models:
@@ -66,6 +72,27 @@ datasets:
     - LCMCR_2
     - LCMCR_3
     - LCMCR_4
+  - 
+    name: wide1_small
+    models:
+    - LCMCR_4_5
+    - LCMCR_7_1.5
+    - LCMCR_7_3
+    - LCMCR_7_5
+  - 
+    name: wide1_medium
+    models:
+    - LCMCR_4_5
+    - LCMCR_7_1.5
+    - LCMCR_7_3
+    - LCMCR_7_5
+  - 
+    name: wide1_large
+    models:
+    - LCMCR_4_5
+    - LCMCR_7_1.5
+    - LCMCR_7_3
+    - LCMCR_7_5
 alpha_sweep:
   model: LCMCR_5_fixed_alpha
   dataset: sim5

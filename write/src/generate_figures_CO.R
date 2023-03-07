@@ -16,11 +16,11 @@ estimates_all <- read.csv(here("write", "input", "summaries", "estimates.csv"))
 
 fit_model4_co1 <- readRDS(here("write", "input", "fit", "LCMCR_4_anonymized-colombia-strata-1.rds"))
 fit_model6_co1 <- readRDS(here("write", "input", "fit", "LCMCR_6_anonymized-colombia-strata-1.rds"))
-fit_model7_co1 <- readRDS(here("write", "input", "fit", "LCMCR_7_anonymized-colombia-strata-1.rds"))
+fit_model7_co1 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_anonymized-colombia-strata-1.rds"))
 
 fit_model4_co3 <- readRDS(here("write", "input", "fit", "LCMCR_4_anonymized-colombia-strata-3.rds"))
 fit_model6_co3 <- readRDS(here("write", "input", "fit", "LCMCR_6_anonymized-colombia-strata-3.rds"))
-fit_model7_co3 <- readRDS(here("write", "input", "fit", "LCMCR_7_anonymized-colombia-strata-3.rds"))
+fit_model7_co3 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_anonymized-colombia-strata-3.rds"))
 
 summaries <- summaries_all %>% filter(grepl("anonymized-colombia-strata-", Dataset))
 estimates <- estimates_all %>% filter(grepl("anonymized-colombia-strata-", Dataset))
@@ -73,7 +73,7 @@ estimates %>%
     
     xlab("Estimated expansion factor") +
     ylab("Density") +
-    scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple")) +
+#    scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple")) +
     facet_wrap(~ Dataset, scales = "free", ncol=1) +
     theme(legend.position = "top")
   
@@ -92,7 +92,7 @@ estimates %>%
     
     xlab("Estimated population size") +
     ylab("Density") +
-    scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple")) +
+    #scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple")) +
     facet_wrap(~ Dataset, scales = "free", ncol=1) +
     theme(legend.position = "top")
   
@@ -180,7 +180,7 @@ estimates %>%
   ggplot() +
     geom_density(aes(x = estimates, fill = model), alpha = 0.25) +
     labs(x="Estimated population size", y="Density") +
-    scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
+    #scale_fill_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
     theme(legend.position = "top") +
     facet_wrap(Dataset ~ ., scales="free", ncol=1)
 
