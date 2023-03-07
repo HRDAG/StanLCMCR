@@ -74,6 +74,7 @@ datasets:
     - LCMCR_4
   - 
     name: wide1_small
+    ground_truth: 300
     models:
     - LCMCR_4_5
     - LCMCR_7_1.5
@@ -81,6 +82,7 @@ datasets:
     - LCMCR_7_5
   - 
     name: wide1_medium
+    ground_truth: 600
     models:
     - LCMCR_4_5
     - LCMCR_7_1.5
@@ -88,6 +90,55 @@ datasets:
     - LCMCR_7_5
   - 
     name: wide1_large
+    ground_truth: 900
+    models:
+    - LCMCR_4_5
+    - LCMCR_7_1.5
+    - LCMCR_7_3
+    - LCMCR_7_5
+  - 
+    name: wide2_small
+    ground_truth: 300
+    models:
+    - LCMCR_4_5
+    - LCMCR_7_1.5
+    - LCMCR_7_3
+    - LCMCR_7_5
+  - 
+    name: wide2_medium
+    ground_truth: 600
+    models:
+    - LCMCR_4_5
+    - LCMCR_7_1.5
+    - LCMCR_7_3
+    - LCMCR_7_5
+  - 
+    name: wide2_large
+    ground_truth: 900
+    models:
+    - LCMCR_4_5
+    - LCMCR_7_1.5
+    - LCMCR_7_3
+    - LCMCR_7_5
+  - 
+    name: wide3_small
+    ground_truth: 300
+    models:
+    - LCMCR_4_5
+    - LCMCR_7_1.5
+    - LCMCR_7_3
+    - LCMCR_7_5
+  - 
+    name: wide3_medium
+    ground_truth: 600
+    models:
+    - LCMCR_4_5
+    - LCMCR_7_1.5
+    - LCMCR_7_3
+    - LCMCR_7_5
+  - 
+    name: wide3_large
+    ground_truth: 900
     models:
     - LCMCR_4_5
     - LCMCR_7_1.5

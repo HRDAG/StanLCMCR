@@ -12,13 +12,16 @@ dataset_names <- summaries_spec$datasets
 
 df_divergences <- data.frame(num.divergent=numeric(), prop.divergent=numeric(), model=character(), Dataset=character())
 df_estimates <- data.frame(estimates=numeric(), model=character(), Dataset=character(), expfacs=numeric())
+df_ground_truths <- data.frame(Dataset=character(), truth=numeric(), expfac_truth=numeric())
 
 for (j in 1:length(dataset_names)) {
     dataset <- dataset_names[[j]]
     dataset_name <- dataset$name
+    truth <- dataset$ground_truth
 
     # We're just going to count the lines on the original dataset, and subtract one for the header, rather than read the whole thing in again
     observed <- peek_count_lines(here("summaries", "input", "import", paste(dataset_name, ".csv", sep=""))) - 1
+    df_ground_truths <- bind_rows(df_ground_truths, tibble(Dataset=dataset_name, truth=truth, expfac_truth=truth/observed))
     
     R_estimate_fn <- here("summaries", "input", "fit", paste("R_", dataset_name, "_estimates.rds", sep=""))
 
@@ -47,7 +50,7 @@ for (j in 1:length(dataset_names)) {
     }
 }
 
-df_summaries <- df_estimates %>% group_by(model, Dataset) %>%
+df_summaries <- df_estimates |> group_by(model, Dataset) |>
     summarize(
       q025 = quantile(estimates, 0.025),
       q500 = quantile(estimates, 0.5),
@@ -59,7 +62,9 @@ df_summaries <- df_estimates %>% group_by(model, Dataset) %>%
       q500_expfac = quantile(expfacs, 0.5),
       q975_expfac = quantile(expfacs, 0.975),
       mean_expfac = mean(expfacs),
-    ) %>% merge(df_divergences, by=c("Dataset", "model"), all=TRUE)
+      ) |> 
+               merge(df_divergences, by=c("Dataset", "model"), all=TRUE) |>
+               merge(df_ground_truths, by=c("Dataset"), all=TRUE)
 
 write.csv(df_estimates, here("summaries", "output", "estimates.csv"), row.names=FALSE)
 write.csv(df_summaries, here("summaries", "output", "summaries.csv"), row.names=FALSE)
@@ -90,7 +95,7 @@ for (i in 1:length(alphas)) {
 }
 
 
-df_summaries_alpha <- df_estimates_alpha %>% group_by(alpha) %>%
+df_summaries_alpha <- df_estimates_alpha |> group_by(alpha) |>
     summarize(
       q025 = quantile(estimates, 0.025),
       q500 = quantile(estimates, 0.5),
@@ -98,7 +103,7 @@ df_summaries_alpha <- df_estimates_alpha %>% group_by(alpha) %>%
       ci_95_length = q975 - q025,
       mean = mean(estimates),
       sd = sd(estimates),
-    ) %>% merge(df_divergences_alpha, by=c("alpha"), all=TRUE)
+    ) |> merge(df_divergences_alpha, by=c("alpha"), all=TRUE)
 
 write.csv(df_estimates_alpha, here("summaries", "output", "estimates_alphas.csv"), row.names=FALSE)
 write.csv(df_summaries_alpha, here("summaries", "output", "summaries_alphas.csv"), row.names=FALSE)
