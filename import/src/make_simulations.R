@@ -24,10 +24,13 @@ for (i in 1:length(datasets)) {
     dataset <- datasets[[i]]
     row <- dataset$rows[[1]]
     rows <- as.data.frame(import_mse_dataset(row$size, row$probs))
-    for (j in 2:length(dataset$rows))
-    {
-        row <- dataset$rows[[j]]
-        rows <- rbind(rows, import_mse_dataset(row$size, row$probs))
+
+    if (length(dataset$rows) > 1) {
+        for (j in 2:length(dataset$rows))
+        {
+            row <- dataset$rows[[j]]
+            rows <- rbind(rows, import_mse_dataset(row$size, row$probs))
+        }
     }
 
     df <- rbind(rows)
@@ -35,7 +38,30 @@ for (i in 1:length(datasets)) {
     # Remove all of the rows unobserved by any of the lists
     df <- df %>% filter(rowSums(across(everything())) > 0)
 
-    write.csv(df, here("import", "output", paste(dataset$name, ".csv", sep="")), row.names=FALSE)
+    # If we are growing columns
+    cols_to_grow <- dataset$grow_columns
+
+    if (is.null(cols_to_grow)) {
+        write.csv(df, here("import", "output", paste(dataset$name, ".csv", sep="")), row.names=FALSE)
+
+        # If we are breaking into substrata:
+
+        substrata_sizes <- dataset$number_of_substrata
+        for (n in substrata_sizes) {
+            nr <- nrow(df)
+            subdfs <- split(df, rep(1:n, each=ceiling(nr/n), length.out=nr))
+            for (j in 1:length(subdfs)) {
+                subdf <- subdfs[[j]]
+                write.csv(subdf, here("import", "output", paste(dataset$name, "-", n, "-", j, ".csv", sep="")), row.names=FALSE)
+            }
+        }
+    }
+    else {
+        for (n in cols_to_grow) {
+            df_subset <- df[1:n] %>% filter(rowSums(across(everything())) > 0)
+            write.csv(df_subset, here("import", "output", paste(dataset$name, "-", n, ".csv", sep="")), row.names=FALSE)
+        }
+    }
 }
 
 # From the LCMCR dataset

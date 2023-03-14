@@ -1,11 +1,12 @@
 ---
 seed: 100
+iterations: 5000
+models:
+  - LCMCR_4_5
+  - LCMCR_7_1.5
+  - LCMCR_7_3
+  - LCMCR_7_5
 datasets:
-  #-
-  #  name: anonymized-colombia-strata-0
-  #  models:
-  #    - LCMCR_4
-  #    - LCMCR_6
   -
     name: anonymized-colombia-strata-1
     models:
@@ -73,77 +74,162 @@ datasets:
     - LCMCR_3
     - LCMCR_4
   - 
-    name: wide1_small
-    ground_truth: 300
-    models:
-    - LCMCR_4_5
-    - LCMCR_7_1.5
-    - LCMCR_7_3
-    - LCMCR_7_5
-  - 
-    name: wide1_medium
-    ground_truth: 600
-    models:
-    - LCMCR_4_5
-    - LCMCR_7_1.5
-    - LCMCR_7_3
-    - LCMCR_7_5
-  - 
-    name: wide1_large
-    ground_truth: 900
-    models:
-    - LCMCR_4_5
-    - LCMCR_7_1.5
-    - LCMCR_7_3
-    - LCMCR_7_5
-  - 
-    name: wide2_small
-    ground_truth: 300
-    models:
-    - LCMCR_4_5
-    - LCMCR_7_1.5
-    - LCMCR_7_3
-    - LCMCR_7_5
-  - 
-    name: wide2_medium
-    ground_truth: 600
-    models:
-    - LCMCR_4_5
-    - LCMCR_7_1.5
-    - LCMCR_7_3
-    - LCMCR_7_5
-  - 
-    name: wide2_large
-    ground_truth: 900
-    models:
-    - LCMCR_4_5
-    - LCMCR_7_1.5
-    - LCMCR_7_3
-    - LCMCR_7_5
-  - 
     name: wide3_small
     ground_truth: 300
-    models:
-    - LCMCR_4_5
-    - LCMCR_7_1.5
-    - LCMCR_7_3
-    - LCMCR_7_5
   - 
     name: wide3_medium
     ground_truth: 600
-    models:
-    - LCMCR_4_5
-    - LCMCR_7_1.5
-    - LCMCR_7_3
-    - LCMCR_7_5
   - 
     name: wide3_large
     ground_truth: 900
-    models:
-    - LCMCR_4_5
-    - LCMCR_7_1.5
-    - LCMCR_7_3
-    - LCMCR_7_5
+  - 
+    name: wide_growing-5
+    ground_truth: 2000
+  - 
+    name: wide_growing-10
+    ground_truth: 2000
+  - 
+    name: wide_growing-15
+    ground_truth: 2000
+  - 
+    name: wide_growing-20
+    ground_truth: 2000
+  - 
+    name: wide_growing-25
+    ground_truth: 2000
+  - 
+    name: wide_growing_independent-5
+    ground_truth: 2000
+  - 
+    name: wide_growing_independent-10
+    ground_truth: 2000
+  - 
+    name: wide_growing_independent-15
+    ground_truth: 2000
+  - 
+    name: wide_growing_independent-20
+    ground_truth: 2000
+  - 
+    name: wide_growing_independent-25
+    ground_truth: 2000
+  - 
+    name: substrata_independent
+    ground_truth: 2000
+  - 
+    name: substrata_independent-2-1
+    family: substrata-independent-2
+    ground_truth: 1000
+  - 
+    name: substrata_independent-2-2
+    family: substrata-independent-2
+    ground_truth: 1000
+  - 
+    name: substrata_independent-3-1
+    family: substrata-independent-3
+    ground_truth: 666
+  - 
+    name: substrata_independent-3-2
+    family: substrata-independent-3
+    ground_truth: 666
+  - 
+    name: substrata_independent-3-3
+    family: substrata-independent-3
+    ground_truth: 666
+  - 
+    name: substrata_independent-4-1
+    family: substrata-independent-4
+    ground_truth: 500
+  - 
+    name: substrata_independent-4-2
+    family: substrata-independent-4
+    ground_truth: 500
+  - 
+    name: substrata_independent-4-3
+    family: substrata-independent-4
+    ground_truth: 500
+  - 
+    name: substrata_independent-4-4
+    family: substrata-independent-4
+    ground_truth: 500
+  - 
+    name: substrata_independent-5-1
+    family: substrata-independent-5
+    ground_truth: 400
+  - 
+    name: substrata_independent-5-2
+    family: substrata-independent-5
+    ground_truth: 400
+  - 
+    name: substrata_independent-5-3
+    family: substrata-independent-5
+    ground_truth: 400
+  - 
+    name: substrata_independent-5-4
+    family: substrata-independent-5
+    ground_truth: 400
+  - 
+    name: substrata_independent-5-5
+    family: substrata-independent-5
+    ground_truth: 400
+  - 
+    name: substrata_dependent
+    ground_truth: 2000
+  - 
+    name: substrata_dependent-2-1
+    family: substrata-dependent-2
+    ground_truth: 1000
+  - 
+    name: substrata_dependent-2-2
+    family: substrata-dependent-2
+    ground_truth: 1000
+  - 
+    name: substrata_dependent-3-1
+    family: substrata-dependent-3
+    ground_truth: 666
+  - 
+    name: substrata_dependent-3-2
+    family: substrata-dependent-3
+    ground_truth: 666
+  - 
+    name: substrata_dependent-3-3
+    family: substrata-dependent-3
+    ground_truth: 666
+  - 
+    name: substrata_dependent-4-1
+    family: substrata-dependent-4
+    ground_truth: 500
+  - 
+    name: substrata_dependent-4-2
+    family: substrata-dependent-4
+    ground_truth: 500
+  - 
+    name: substrata_dependent-4-3
+    family: substrata-dependent-4
+    ground_truth: 500
+  - 
+    name: substrata_dependent-4-4
+    family: substrata-dependent-4
+    ground_truth: 500
+  - 
+    name: substrata_dependent-5-1
+    family: substrata-dependent-5
+    ground_truth: 400
+  - 
+    name: substrata_dependent-5-2
+    family: substrata-dependent-5
+    ground_truth: 400
+  - 
+    name: substrata_dependent-5-3
+    family: substrata-dependent-5
+    ground_truth: 400
+  - 
+    name: substrata_dependent-5-4
+    family: substrata-dependent-5
+    ground_truth: 400
+  - 
+    name: substrata_dependent-5-5
+    family: substrata-dependent-5
+    ground_truth: 400
 alpha_sweep:
   model: LCMCR_5_fixed_alpha
   dataset: sim5

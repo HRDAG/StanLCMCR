@@ -11,15 +11,66 @@ datasets:
   #- sim3
   #- sim4
   #- sim5
-  #- wide1_small
-  #- wide1_medium
-  #- wide1_large
-  #- wide2_small
-  #- wide2_medium
-  - wide2_large
-  - wide3_small
-  - wide3_medium
-  - wide3_large
+  #- wide3_small
+  #- wide3_medium
+  #- wide3_large
+  #- wide_growing-5
+  #- wide_growing-10
+  #- wide_growing-15
+  #- wide_growing-20
+  #- wide_growing-25
+  - wide_growing_independent-5
+  - wide_growing_independent-10
+  - wide_growing_independent-15
+  - wide_growing_independent-20
+  - wide_growing_independent-25
+  #- substrata_independent
+  #- substrata_independent-2-1
+  #- substrata_independent-2-2
+  #- substrata_independent-3-1
+  #- substrata_independent-3-2
+  #- substrata_independent-3-3
+  #- substrata_independent-4-1
+  #- substrata_independent-4-2
+  #- substrata_independent-4-3
+  #- substrata_independent-4-4
+  #- substrata_independent-5-1
+  #- substrata_independent-5-2
+  #- substrata_independent-5-3
+  #- substrata_independent-5-4
+  #- substrata_independent-5-5
+  #- substrata_dependent
+  #- substrata_dependent-2-1
+  #- substrata_dependent-2-2
+  #- substrata_dependent-3-1
+  #- substrata_dependent-3-2
+  #- substrata_dependent-3-3
+  #- substrata_dependent-4-1
+  #- substrata_dependent-4-2
+  #- substrata_dependent-4-3
+  #- substrata_dependent-4-4
+  #- substrata_dependent-5-1
+  #- substrata_dependent-5-2
+  #- substrata_dependent-5-3
+  #- substrata_dependent-5-4
+  #- substrata_dependent-5-5
+  - substrata_skinny_dependent
+  - substrata_skinny_dependent-2-1
+  - substrata_skinny_dependent-2-2
+  - substrata_skinny_dependent-3-1
+  - substrata_skinny_dependent-3-2
+  - substrata_skinny_dependent-3-3
+  - substrata_skinny_dependent-4-1
+  - substrata_skinny_dependent-4-2
+  - substrata_skinny_dependent-4-3
+  - substrata_skinny_dependent-4-4
+  - substrata_skinny_dependent-5-1
+  - substrata_skinny_dependent-5-2
+  - substrata_skinny_dependent-5-3
+  - substrata_skinny_dependent-5-4
+  - substrata_skinny_dependent-5-5
+    #- nonidentifiability_example_small
+    #- nonidentifiability_example_medium
 models:
   #- model: LCMCR
   #- model: LCMCR_2
@@ -27,16 +78,16 @@ models:
   - model: LCMCR_4
   #- model: LCMCR_6
   - model: LCMCR_7
-    prior_q025: 1.01
+    prior_q025: 1.1
     prior_q975:
       - 1.5
       - 3
       - 5
 settings:
   K: 20
-  n_iters: 5000
+  n_iters: 25000
   chains: 4
-  warmup: 2000
+  warmup: 5000
   adapt_delta: 0.8
 R_settings:
   a_alpha: 0.25
@@ -45,8 +96,8 @@ R_settings:
   thinning: 100
   K: 20
   trace: FALSE
-  burnin: 10000
-  n_iters: 10000
+  burnin: 50000
+  n_iters: 50000
 alpha_sweep:
   dataset: sim5
   model: LCMCR_5_fixed_alpha

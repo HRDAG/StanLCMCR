@@ -1,6 +1,6 @@
 library(pacman)
 
-pacman::p_load(here, tidyverse, scales, patchwork)
+pacman::p_load(here, tidyverse, scales, patchwork, ggridges)
 
 theme_set(theme_minimal())
 
@@ -61,7 +61,7 @@ summaries |>
   geom_errorbar(aes(x=Dataset, ymin=q025, ymax=q975, group=model, color=model), width=0.5, position="dodge") +
   geom_point(aes(x=Dataset, y=q500/q500_expfac), size=3, shape=3) +
 #  geom_hline(yintercept=2000, linetype="dotted") +
-  labs(y="Estimates with medians and 95% CIs") +
+  labs(y="Estimates with medians and 95% CIs (black plus = observed)") +
   theme(legend.position="bottom")
 
 ggsave(here("write", "output", "posterior-CIs-CO.png"), width=5, height=4)
@@ -123,12 +123,13 @@ plot.chain.diagnostics.grid <- function(stan_fit, varnames, title="") {
 
 pis = c("pi[1]", "pi[2]", "pi[3]", "pi[4]") # Probability of belonging to the first four latent classes
 lambdas = c("lambda[1,1]", "lambda[1,2]", "lambda[1,3]", "lambda[1,4]") # Probability of belonging to the first four latent classes
+Ns = c("N")
 #lambdas = c("lambda[1,1]", "lambda[2,1]", "lambda[3,1]", "lambda[4,1]") # Probability of belonging to the first four latent classes
 
 plot.chain.diagnostics.grid(fit_model6_co1, pis)
 ggsave(here("write", "output", "label-switching-stan6-co1.png"), height=6, width=7)
 
-plot.chain.diagnostics.grid(fit_model7_co1, pis)
+plot.chain.diagnostics.grid(fit_model7_co3, pis)
 ggsave(here("write", "output", "label-switching-stan7-co1.png"), height=6, width=7)
 
 plot.chain.diagnostics.grid(fit_model4_co3, pis)
@@ -197,6 +198,7 @@ plot.divergent.transitions(fit_model4_co3, 3, "pi[1]")
 
 print("Colombia-specific plot of expansion factors")
 
+# Barbells
 summaries |>
   mutate(model = recode_factor(model, R="R", LCMCR_4="Stan (unif)")) |>
   ggplot() +
@@ -212,3 +214,20 @@ summaries |>
 
 ggsave(here("write", "output", "expansion-factors-CO.png"), height=6, width=4)
 
+# Ridgelines
+summaries |>
+  mutate(model = recode_factor(model, R="R", LCMCR_4="LCMCR_4")) |>
+  ggplot() +
+    geom_point(aes(x = q025_expfac, y=model)) +
+    geom_point(aes(x = q975_expfac, y=model)) +
+    geom_point(aes(x = q500_expfac, y=model), shape=1) +
+    geom_segment(aes(x = q025_expfac, xend=q975_expfac, y=model, yend=model)) +
+    scale_y_discrete(limits=rev) +
+    stat_density_ridges(data=estimates, mapping=aes(x=expfacs, y=model), quantile_lines=TRUE, quantiles=c(0.025, 0.5, 0.975), rel_min_height = 0.01, alpha=0.5, scale=1) +
+    coord_cartesian(xlim=c(1, 6)) +
+    labs(x="Expansion factor", y="") +
+    scale_color_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
+    theme(legend.position = "top") +
+    facet_wrap(Dataset ~ ., scales="free", ncol=1)
+
+ggsave(here("write", "output", "expansion-factors-ridges-CO.png"), height=6, width=4)

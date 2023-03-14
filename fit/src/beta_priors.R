@@ -48,7 +48,7 @@ gamma_params_to_beta_products <- function(alpha, beta, J) {
   # (a, b) such that X ~= log(Y_1 * Y_2 * ... * Y_J)
   # where Y_i ~ beta(a, b)
   
-  found <- uniroot(variance_difference_moment_matching, c(0.0001, 10), alpha=alpha, beta=beta, J=J, tol=.Machine$double.eps, maxiter=50000)
+  found <- uniroot(variance_difference_moment_matching, c(0.0001, 100), alpha=alpha, beta=beta, J=J, tol=.Machine$double.eps, maxiter=50000)
   a <- found$root
   b <- beta_b_from_gamma(alpha, beta, J, a)
   
