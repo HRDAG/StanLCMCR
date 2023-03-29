@@ -230,6 +230,65 @@ datasets:
     name: substrata_dependent-5-5
     family: substrata-dependent-5
     ground_truth: 400
+  -
+    name: substrata_skinny_dependent
+    ground_truth: 2000
+  - 
+    name: substrata_skinny_dependent-2-1
+    family: substrata-skinny-dependent-2
+    ground_truth: 1000
+  - 
+    name: substrata_skinny_dependent-2-2
+    family: substrata-skinny-dependent-2
+    ground_truth: 1000
+  - 
+    name: substrata_skinny_dependent-3-1
+    family: substrata-skinny-dependent-3
+    ground_truth: 666
+  - 
+    name: substrata_skinny_dependent-3-2
+    family: substrata-skinny-dependent-3
+    ground_truth: 666
+  - 
+    name: substrata_skinny_dependent-3-3
+    family: substrata-skinny-dependent-3
+    ground_truth: 666
+  - 
+    name: substrata_skinny_dependent-4-1
+    family: substrata-skinny-dependent-4
+    ground_truth: 500
+  - 
+    name: substrata_skinny_dependent-4-2
+    family: substrata-skinny-dependent-4
+    ground_truth: 500
+  - 
+    name: substrata_skinny_dependent-4-3
+    family: substrata-skinny-dependent-4
+    ground_truth: 500
+  - 
+    name: substrata_skinny_dependent-4-4
+    family: substrata-skinny-dependent-4
+    ground_truth: 500
+  - 
+    name: substrata_skinny_dependent-5-1
+    family: substrata-skinny-dependent-5
+    ground_truth: 400
+  - 
+    name: substrata_skinny_dependent-5-2
+    family: substrata-skinny-dependent-5
+    ground_truth: 400
+  - 
+    name: substrata_skinny_dependent-5-3
+    family: substrata-skinny-dependent-5
+    ground_truth: 400
+  - 
+    name: substrata_skinny_dependent-5-4
+    family: substrata-skinny-dependent-5
+    ground_truth: 400
+  - 
+    name: substrata_skinny_dependent-5-5
+    family: substrata-skinny-dependent-5
+    ground_truth: 400
 alpha_sweep:
   model: LCMCR_5_fixed_alpha
   dataset: sim5

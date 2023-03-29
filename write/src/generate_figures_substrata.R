@@ -55,14 +55,28 @@ summaries_substrata_dep <- summaries_all |>
   mutate(model = recode_factor(model, LCMCR_4_5 = "Uniform", `LCMCR_7_1.5`="Priors (1.5)", LCMCR_7_3 = "Priors (3)", LCMCR_7_5 = "Priors (5)"),
         Dataset = replace(Dataset, Dataset == "substrata_dependent", "substrata-dependent")) |>
   filter(grepl("substrata-dependent", Dataset)) |>
-  mutate(n_substrata=as.numeric(substr(Dataset, 21, 21))) |>
+  mutate(n_substrata=as.numeric(substr(Dataset, 21, 100))) |>
   mutate(n_substrata=replace_na(n_substrata, 1))
       
 estimates_substrata_dep <- estimates_all |>
   mutate(model = recode_factor(model, LCMCR_4_5 = "Uniform", `LCMCR_7_1.5`="Priors (1.5)", LCMCR_7_3 = "Priors (3)", LCMCR_7_5 = "Priors (5)"),
         Dataset = replace(Dataset, Dataset == "substrata_dependent", "substrata-dependent")) |>
   filter(grepl("substrata-dependent", Dataset)) |>
-  mutate(n_substrata=as.numeric(substr(Dataset, 21, 21))) |>
+  mutate(n_substrata=as.numeric(substr(Dataset, 21, 100))) |>
+  mutate(n_substrata=replace_na(n_substrata, 1))
+
+summaries_substrata_skinny_dep <- summaries_all |>
+  mutate(model = recode_factor(model, LCMCR_4_5 = "Uniform", `LCMCR_7_1.5`="Priors (1.5)", LCMCR_7_3 = "Priors (3)", LCMCR_7_5 = "Priors (5)"),
+        Dataset = replace(Dataset, Dataset == "substrata_skinny_dependent", "substrata-skinny-dependent")) |>
+  filter(grepl("substrata-skinny-dependent", Dataset)) |>
+  mutate(n_substrata=as.numeric(substr(Dataset, 28, 100))) |>
+  mutate(n_substrata=replace_na(n_substrata, 1))
+      
+estimates_substrata_skinny_dep <- estimates_all |>
+  mutate(model = recode_factor(model, LCMCR_4_5 = "Uniform", `LCMCR_7_1.5`="Priors (1.5)", LCMCR_7_3 = "Priors (3)", LCMCR_7_5 = "Priors (5)"),
+        Dataset = replace(Dataset, Dataset == "substrata_skinny_dependent", "substrata-skinny-dependent")) |>
+  filter(grepl("substrata-skinny-dependent", Dataset)) |>
+  mutate(n_substrata=as.numeric(substr(Dataset, 28, 100))) |>
   mutate(n_substrata=replace_na(n_substrata, 1))
 
 ###############################################
@@ -135,11 +149,11 @@ summaries_substrata_ind |>
     theme(legend.position = "top")
 
 #######
-# Two latent classes
+# Two latent classes: wide
 ######
 
 # Estimates as bars
-summaries_substrata_dep |>
+plot_substrata_dep_bars <- summaries_substrata_dep |>
   mutate(model = recode_factor(model, R="R")) |>
   ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model, linetype=model)) +
     geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
@@ -148,12 +162,28 @@ summaries_substrata_dep |>
     geom_point(aes(y=q975), position=position_dodge(width=0.3), shape=1) +
     geom_line(position=position_dodge(width=0.3)) +
     geom_hline(yintercept=2000, linetype="dashed") +
-    labs(x="Number of strata", y="Estimates (N=2000)") +
+    labs(x="Number of strata (25 lists)", y="Estimates (N=2000)") +
     scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / 729, name = "Expansion factor") )  +
-    theme(legend.position = "top")
+    theme(legend.position = "none")
+
+# Estimates as bars
+plot_substrata_dep_two_bars <- summaries_substrata_dep |>
+  mutate(model = recode_factor(model, R="R")) |>
+  filter(model %in% c("R", "Priors (5)")) |>
+  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model, linetype=model)) +
+    geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
+    geom_point(position=position_dodge(width=0.3)) +
+    geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
+    geom_point(aes(y=q975), position=position_dodge(width=0.3), shape=1) +
+    geom_line(position=position_dodge(width=0.3)) +
+    geom_hline(yintercept=2000, linetype="dashed") +
+    labs(x="Number of strata (25 lists)", y="Estimates (N=2000)") +
+    scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / 729, name = "Expansion factor") )  +
+    theme(legend.position = "none")
+
 
 # Estimates as violin plots (R vs. 5)
-estimates_substrata_dep |>
+plot_substrata_dep_violin <- estimates_substrata_dep |>
   mutate(model = recode_factor(model, R="R", `Priors (5)` = "Priors (5)")) |>
   filter(model %in% c("R", "Priors (5)")) |>
   mutate(n_substrata = as.factor(n_substrata)) |>
@@ -163,8 +193,8 @@ estimates_substrata_dep |>
     geom_line(data=summaries_substrata_dep |>
                 mutate(model = recode_factor(model, R="R", `Priors (5)` = "Priors (5)")) |>
                 filter(model %in% c("R", "Priors (5)")), aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model)) +
-    theme(legend.position = "top") +
-    labs(x="Number of strata", y="Estimates (N=2000)") +
+    theme(legend.position = "none") +
+    labs(x="Number of strata (25 lists)", y="Estimates (N=2000)") +
     scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / 729, name = "Expansion factor") ) 
 
 # Estimates as violin plots (R vs 3)
@@ -195,28 +225,94 @@ summaries_substrata_dep |>
     scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / 729, name = "Expansion factor") )  +
     theme(legend.position = "top")
 
-    
-##################
-# These are a bit ugly:
-##################
+#######
+# Two latent classes: skinny (J=5)
+######
 
-# Expfacs
-summaries_substrata_ind |>
-  filter(model %in% c("R", "Priors (5)")) |>
-  ggplot(aes(x=n_substrata, y=q500_expfac, ymin=q025_expfac, ymax=q975_expfac, color=model, fill=model)) +
-    geom_ribbon(alpha=0.1) +
-    geom_line() +
-    geom_line(mapping=aes(x=n_substrata, y=expfac_truth), color="black", linetype="dashed") +
-    labs(x="Number of strata", y="Expansion factors (truth=dashed)") +
+skinny_observed <- 669
+
+# Estimates as bars
+plot_substrata_skinny_bars <-
+  summaries_substrata_skinny_dep |>
+  mutate(model = recode_factor(model, R="R")) |>
+  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model, linetype=model)) +
+    geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
+    geom_point(position=position_dodge(width=0.3)) +
+    geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
+    geom_point(aes(y=q975), position=position_dodge(width=0.3), shape=1) +
+    geom_line(position=position_dodge(width=0.3)) +
+    geom_hline(yintercept=2000, linetype="dashed") +
+    labs(x="Number of strata (4 lists)", y="Estimates (N=2000)") +
+    scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / skinny_observed, name = "Expansion factor") )  +
     theme(legend.position = "top")
 
-# Estimates
-summaries_substrata_ind |>
+# Estimates as bars
+plot_substrata_skinny_two_bars <- summaries_substrata_skinny_dep |>
+  mutate(model = recode_factor(model, R="R")) |>
   filter(model %in% c("R", "Priors (5)")) |>
-  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model, fill=model)) +
-    geom_ribbon(alpha=0.1) +
+  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model, linetype=model)) +
+    geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
+    geom_point(position=position_dodge(width=0.3)) +
+    geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
+    geom_point(aes(y=q975), position=position_dodge(width=0.3), shape=1) +
+    geom_line(position=position_dodge(width=0.3)) +
+    geom_hline(yintercept=2000, linetype="dashed") +
+    labs(x="Number of strata (4 lists)", y="Estimates (N=2000)") +
+    scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / skinny_observed, name = "Expansion factor") )  +
+    theme(legend.position = "top")
+
+
+# Estimates as violin plots (R vs. 5)
+plot_substrata_skinny_violin <- estimates_substrata_skinny_dep |>
+  mutate(model = recode_factor(model, R="R", `Priors (5)` = "Priors (5)")) |>
+  filter(model %in% c("R", "Priors (5)")) |>
+  mutate(n_substrata = as.factor(n_substrata)) |>
+  ggplot(aes(x=n_substrata, y=estimates, fill=model)) +
+    geom_violin(position=position_dodge(width=0.2), alpha=0.5) +
+    geom_hline(yintercept=2000, linetype="dashed") +
+    geom_line(data=summaries_substrata_skinny_dep |>
+                mutate(model = recode_factor(model, R="R", `Priors (5)` = "Priors (5)")) |>
+                filter(model %in% c("R", "Priors (5)")), aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model)) +
+    theme(legend.position = "top") +
+    labs(x="Number of strata (4 lists)", y="Estimates (N=2000)") +
+    scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / skinny_observed, name = "Expansion factor") ) 
+
+# Estimates as violin plots (R vs 3)
+estimates_substrata_skinny_dep |>
+  mutate(model = recode_factor(model, R="R", `Priors (3)` = "Priors (3)")) |>
+  filter(model %in% c("R", "Priors (3)")) |>
+  mutate(n_substrata = as.factor(n_substrata)) |>
+  ggplot(aes(x=n_substrata, y=estimates, fill=model)) +
+    geom_violin(position=position_dodge(width=0.2), alpha=0.5) +
+    geom_hline(yintercept=2000, linetype="dashed") +
+    geom_line(data=summaries_substrata_skinny_dep |>
+                mutate(model = recode_factor(model, R="R", `Priors (3)` = "Priors (3)")) |>
+                filter(model %in% c("R", "Priors (3)")), aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model)) +
+    theme(legend.position = "top") +
+    labs(x="Number of strata", y="Estimates (N=2000)") +
+    scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / skinny_observed, name = "Expansion factor") ) 
+
+# Estimates as colored lines
+summaries_substrata_skinny_dep |>
+  mutate(model = recode_factor(model, R="R")) |>
+  ggplot(aes(x=n_substrata, y=q500, color=model, linetype=model, shape=model)) +
+    geom_point() +
     geom_line() +
+    geom_ribbon(data=summaries_substrata_skinny_dep |> filter(model == "R"), mapping=aes(ymin=q025, ymax=q975), alpha=0.1, fill="red") +
+    geom_ribbon(data=summaries_substrata_skinny_dep |> filter(model == "Priors (5)"), mapping=aes(ymin=q025, ymax=q975), alpha=0.1, fill="purple") +
     geom_hline(yintercept=2000, linetype="dashed") +
     labs(x="Number of strata", y="Estimates (N=2000)") +
-    theme(legend.position = "top") 
-    
+    scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / skinny_observed, name = "Expansion factor") )  +
+    theme(legend.position = "top")
+
+##################
+# Joining together
+##################
+plot_substrata_skinny_bars / plot_substrata_dep_bars 
+ggsave(here("write", "output", "substrata_experiments_all.pdf"), width=6, height=8)
+
+plot_substrata_skinny_two_bars / plot_substrata_dep_two_bars 
+ggsave(here("write", "output", "substrata_experiments_two_bars.pdf"), width=6, height=8)
+
+plot_substrata_skinny_violin / plot_substrata_dep_violin 
+ggsave(here("write", "output", "substrata_experiments_violin.pdf"), width=6, height=8)
