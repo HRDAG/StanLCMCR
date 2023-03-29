@@ -1,5 +1,5 @@
 library(pacman)
-pacman::p_load(here, yaml, tidyverse)
+pacman::p_load(here, yaml, dplyr, readr)
 
 co_yaml_path <- here("import", "hand", "CO.yaml")
 co_raw_path <- here("import", "input", "mr-homicidio-R1.csv")
