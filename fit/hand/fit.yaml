@@ -19,11 +19,11 @@ datasets:
   #- wide_growing-15
   #- wide_growing-20
   #- wide_growing-25
-  - wide_growing_independent-5
-  - wide_growing_independent-10
-  - wide_growing_independent-15
-  - wide_growing_independent-20
-  - wide_growing_independent-25
+  #- wide_growing_independent-5
+  #- wide_growing_independent-10
+  #- wide_growing_independent-15
+  #- wide_growing_independent-20
+  #- wide_growing_independent-25
   #- substrata_independent
   #- substrata_independent-2-1
   #- substrata_independent-2-2
@@ -54,23 +54,54 @@ datasets:
   #- substrata_dependent-5-3
   #- substrata_dependent-5-4
   #- substrata_dependent-5-5
-  - substrata_skinny_dependent
-  - substrata_skinny_dependent-2-1
-  - substrata_skinny_dependent-2-2
-  - substrata_skinny_dependent-3-1
-  - substrata_skinny_dependent-3-2
-  - substrata_skinny_dependent-3-3
-  - substrata_skinny_dependent-4-1
-  - substrata_skinny_dependent-4-2
-  - substrata_skinny_dependent-4-3
-  - substrata_skinny_dependent-4-4
-  - substrata_skinny_dependent-5-1
-  - substrata_skinny_dependent-5-2
-  - substrata_skinny_dependent-5-3
-  - substrata_skinny_dependent-5-4
-  - substrata_skinny_dependent-5-5
-    #- nonidentifiability_example_small
-    #- nonidentifiability_example_medium
+  #- substrata_skinny_dependent
+  #- substrata_skinny_dependent-2-1
+  #- substrata_skinny_dependent-2-2
+  #- substrata_skinny_dependent-3-1
+  #- substrata_skinny_dependent-3-2
+  #- substrata_skinny_dependent-3-3
+  #- substrata_skinny_dependent-4-1
+  #- substrata_skinny_dependent-4-2
+  #- substrata_skinny_dependent-4-3
+  #- substrata_skinny_dependent-4-4
+  #- substrata_skinny_dependent-5-1
+  #- substrata_skinny_dependent-5-2
+  #- substrata_skinny_dependent-5-3
+  #- substrata_skinny_dependent-5-4
+  #- substrata_skinny_dependent-5-5
+  #- nonidentifiability_example_small
+  #- nonidentifiability_example_medium
+  - CO_strata_g1
+  - CO_strata_g2
+  - CO_strata_g3
+  - CO_strata_g4
+  - CO_strata_g5
+  - CO_strata_g6
+  - CO_strata_g7
+  - CO_strata_g8
+  - CO_strata_g9
+  - CO_strata_g10
+  - CO_strata_g11
+  - CO_strata_g12
+  - CO_strata_g13
+  - CO_strata_g14
+  - CO_strata_g15
+  - CO_strata_g16
+  - CO_strata_g17
+  - CO_strata_g18
+  - CO_strata_g19
+  - CO_strata_g20
+  - CO_strata_g21
+  - CO_strata_g22
+  - CO_strata_g23
+  - CO_strata_g24
+  - CO_superstrata_g1-g2
+  - CO_superstrata_g3-g6
+  - CO_superstrata_g7-g9
+  - CO_superstrata_g10-g12
+  - CO_superstrata_g13-g17
+  - CO_superstrata_g18-g19
+  - CO_superstrata_g20-24
 models:
   #- model: LCMCR
   #- model: LCMCR_2

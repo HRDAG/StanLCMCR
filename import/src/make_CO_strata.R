@@ -40,6 +40,8 @@ co <- co_raw |> filter(is_conflict == TRUE) |>
 print("Forming strata...")
 
 strata <- strata_spec$strata
+all_strata <- list()
+
 for (i in 1:length(strata)) {
     stratum <- strata[[i]]
     stratum_num <- stratum$stratum
@@ -57,6 +59,24 @@ for (i in 1:length(strata)) {
         co_stratum <- co_stratum[co_stratum[[colname]] == criteria[[colname]],]
     }
 
+    all_strata[[stratum_num]] <- co_stratum
+
     write.csv(co_stratum, file=here("import", "output", paste("CO_strata_", stratum_num, ".csv", sep="")))
     print(paste(stratum_num, nrow(co_stratum)))
+}
+
+superstrata <- strata_spec$superstrata
+for (superstratum in superstrata) {
+    superstratum_name <- superstratum$name
+    superstratum_strata <- superstratum$strata
+
+    superstratum_df <- all_strata[[superstratum_strata[[1]]]]
+
+    for (j in 2:length(superstratum_strata)) {
+        s <- superstratum_strata[[j]]
+        superstratum_df <- rbind(superstratum_df, all_strata[[j]])
+    }
+
+    write.csv(superstratum_df, file=here("import", "output", paste("CO_superstrata_", superstratum_name, ".csv", sep="")))
+    print(paste(superstratum_name, nrow(superstratum_df)))
 }

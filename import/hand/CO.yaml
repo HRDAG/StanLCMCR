@@ -350,3 +350,48 @@ strata:
       yy_hecho_start: 2005
       yy_hecho_end: 2009
       sexo: MUJER
+superstrata:
+  -
+    name: g1-g2
+    strata:
+      - g1
+      - g2
+  -
+    name: g3-g6
+    strata:
+      - g3
+      - g4
+      - g5
+  -
+    name: g7-g9
+    strata:
+      - g7
+      - g8
+      - g9
+  -
+    name: g10-g12
+    strata:
+      - g10
+      - g11
+      - g12
+  -
+    name: g13-g17
+    strata:
+      - g13
+      - g14
+      - g15
+      - g16
+      - g17
+  -
+    name: g18-g19
+    strata:
+      - g18
+      - g19
+  -
+    name: g20-24
+    strata:
+      - g20
+      - g21
+      - g22
+      - g23
+      - g24
