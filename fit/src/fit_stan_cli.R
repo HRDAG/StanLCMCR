@@ -1,5 +1,5 @@
 library(pacman)
-pacman::p_load(here, cmdstanr, yaml, readr, dplyr, argparse)
+pacman::p_load(here, yaml, readr, dplyr, argparse)
 source(here("fit", "src", "lib_fit_stan.R"))
 source(here("fit", "src", "lib_fit_R.R"))
 

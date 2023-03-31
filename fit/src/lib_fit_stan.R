@@ -1,5 +1,11 @@
 library(pacman)
-pacman::p_load(here, cmdstanr, dplyr)
+pacman::p_load(here, dplyr, purrr)
+
+if (!require("cmdstanr")) {
+  install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+  pacman::p_load(cmdstanr)
+}
+
 
 source(here("fit", "src", "beta_priors.R"))
 
@@ -16,17 +22,20 @@ fit_stan <- function(model, data, K=10, num_iter=2000, seed=19481210, chains=4, 
 
   # This is only for models where we need to set the beta priors a and b
   recovered <- beta_params_from_expansion_factor_quantiles(0.025, 0.975, lower, upper, J, detailed=FALSE)
-  
+
+  list_count <- sapply(data, sum)
+
   stan_data_list <- list(J = J,
                          C = nrow(stan_data_tabular),
                          list_indicators = stan_data,
                          cell_count = stan_data_tabular$cell_count,
-                         list_count = sapply(data, sum),
+                         list_count = list_count,
                          K = K,
                          alpha = alpha,
                          a=recovered$a,
-                         b=recovered$b) |>
-      compact()
+                         b=recovered$b)
+
+  stan_data_list <- purrr::compact(stan_data_list)
 
   print(stan_data_list)
   

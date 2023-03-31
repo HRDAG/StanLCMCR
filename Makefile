@@ -25,9 +25,10 @@ clean:
 	cd write && make clean
 
 scaffold:
-	mkdir -p compile/output import/output fit/input fit/output summaries/output write/input write/output/diagnostics
+	mkdir -p compile/output import/output fit/input fit/output summaries/input summaries/output write/input write/output/diagnostics
 	-cd fit/input && ln -s ../../compile/output models
 	-cd fit/input && ln -s ../../import/output data
-	-cd summaries && ln -s ../fit/output input
+	-cd summaries/input && ln -s ../../fit/output fit
+	-cd summaries/input && ln -s ../../import/output import
 	-cd write/input && ln -s ../../summaries/output summaries
 	-cd write/input && ln -s ../../fit/output fit

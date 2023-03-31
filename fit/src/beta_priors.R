@@ -4,8 +4,7 @@ pacman::p_load(
   "here",
   "transport", # for Wasserstein distance
   "distr", # for inverse digamma function, igamma
-  "rriskDistributions", # for fitting gamma quantiles, get.gamma.par
-  "tidyverse"
+  "rriskDistributions" # for fitting gamma quantiles, get.gamma.par
 )
 
 idigamma_appx <- function(x) {
