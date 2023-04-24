@@ -15,7 +15,9 @@ The repository structure is broken up into atomic tasks joined together using Ma
 
 ## Installation and running
 
-The only R dependency is `pacman`. If it is not installed, run
+We are using an experimental version of the R LCMCR package that takes two parameters: `a_lambda` and `b_lambda`. Create a directory called `opt/` from the root project directory, and install the package there: `install.packages('R_Package_basic/output/LCMCR_0.5.0.tar.gz', lib = '~/path/to/project/opt')`.
+
+Aside from the experimental LCMCR package, the main R dependency is `pacman`. If it is not installed, run
 
 ```
 Rscript -e 'install.packages("pacman")'

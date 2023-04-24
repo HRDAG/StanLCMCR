@@ -11,21 +11,23 @@ datasets <- fit_params$datasets
 for (i in 1:length(datasets)) {
     dataset_name <- datasets[[i]]
     df <- read.csv(here("fit", "input", "data", paste(dataset_name, ".csv", sep="")))
+    model_q025 <- R_settings$prior_q025
+    model_q975s <- R_settings$prior_q975
 
-    results <- fit_R(df,
-          a_alpha=R_settings$a_alpha,
-          b_alpha=R_settings$b_alpha,
-          seed=fit_params$seed,
-          buffer_size=R_settings$buffer_size,
-          thinning=R_settings$thinning,
-          K=R_settings$K,
-          trace=R_settings$trace,
-          burnin=R_settings$burnin,
-          samples=R_settings$n_iters)
+    if (is.null(model_q025)) {
+        model_q025 <- 1.01
+        model_q975s <- c(5)
+    }
 
-    estimates <- results[["estimates"]]
-    sampler <- results[["sampler"]]
+    for (q975 in model_q975s) {
+        run_name <- paste("R", q975, dataset_name, sep="_")
 
-    saveRDS(estimates, file=here("fit", "output", paste("R", dataset_name, "estimates.rds", sep="_")))
-    saveRDS(sampler, file=here("fit", "output", paste("R", dataset_name, "model.rds", sep="_")))
+        rscript_args <- c(here("fit/src/fit_stan_cli.R"), "--model", "R", "--dataset", dataset_name, "--q975", q975)
+
+        if (fit_params$use_slurm) {
+            system2("srun", c("--ntasks=1", "--nodes=1", paste("--cpus-per-task=", fit_params$settings$chains, sep=""), "Rscript", rscript_args), wait=FALSE)
+        } else {
+            system2("Rscript", rscript_args)
+        }
+    }
 }

@@ -29,6 +29,8 @@ if (model == "R") {
     results <- fit_R(df,
           a_alpha=R_settings$a_alpha,
           b_alpha=R_settings$b_alpha,
+          a_lambda=model_q025,
+          b_lambda=model_q975,
           seed=fit_params$seed,
           buffer_size=R_settings$buffer_size,
           thinning=R_settings$thinning,

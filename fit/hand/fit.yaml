@@ -1,5 +1,6 @@
 ---
 seed: 100
+use_slurm: True
 datasets:
     #  - kosovo
     #  - sim1
@@ -135,6 +136,11 @@ R_settings:
   trace: FALSE
   burnin: 50000
   n_iters: 5000000
+  prior_q025: 1.1
+  prior_q975:
+    - 1.5
+    - 3
+    - 5
 alpha_sweep:
   dataset: sim5
   model: LCMCR_5_fixed_alpha
