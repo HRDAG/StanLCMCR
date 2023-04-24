@@ -160,10 +160,42 @@ strata:
       dept_code_hecho: 50
       p_str: PARA
   -
-    stratum: g21
+    stratum: g21_00
     good: true
     criteria:
       yy_hecho_start: 2000
+      yy_hecho_end: 2000
+      dept_code_hecho: 50
+      p_str: PARA
+  -
+    stratum: g21_01
+    good: true
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      dept_code_hecho: 50
+      p_str: PARA
+  -
+    stratum: g21_02
+    good: true
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      dept_code_hecho: 50
+      p_str: PARA
+  -
+    stratum: g21_03
+    good: true
+    criteria:
+      yy_hecho_start: 2003
+      yy_hecho_end: 2003
+      dept_code_hecho: 50
+      p_str: PARA
+  -
+    stratum: g21_04
+    good: true
+    criteria:
+      yy_hecho_start: 2004
       yy_hecho_end: 2004
       dept_code_hecho: 50
       p_str: PARA
@@ -172,6 +204,46 @@ strata:
     good: true
     criteria:
       yy_hecho_start: 1995
+      yy_hecho_end: 1999
+      dept_code_hecho: 54
+      p_str: PARA
+  -
+    stratum: g22_95
+    good: true
+    criteria:
+      yy_hecho_start: 1995
+      yy_hecho_end: 1995
+      dept_code_hecho: 54
+      p_str: PARA
+  -
+    stratum: g22_96
+    good: true
+    criteria:
+      yy_hecho_start: 1996
+      yy_hecho_end: 1996
+      dept_code_hecho: 54
+      p_str: PARA
+  -
+    stratum: g22_97
+    good: true
+    criteria:
+      yy_hecho_start: 1997
+      yy_hecho_end: 1997
+      dept_code_hecho: 54
+      p_str: PARA
+  -
+    stratum: g22_98
+    good: true
+    criteria:
+      yy_hecho_start: 1998
+      yy_hecho_end: 1998
+      dept_code_hecho: 54
+      p_str: PARA
+  -
+    stratum: g22_99
+    good: true
+    criteria:
+      yy_hecho_start: 1999
       yy_hecho_end: 1999
       dept_code_hecho: 54
       p_str: PARA

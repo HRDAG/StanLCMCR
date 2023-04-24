@@ -1,76 +1,72 @@
 ---
 seed: 100
 datasets:
-  # - anonymized-colombia-strata-0
-  #- anonymized-colombia-strata-1
-  #- anonymized-colombia-strata-3
-  #- anonymized-colombia-strata-12
-  #- kosovo
-  #- sim1
-  #- sim2
-  #- sim3
-  #- sim4
-  #- sim5
-  #- wide3_small
-  #- wide3_medium
-  #- wide3_large
-  #- wide_growing-5
-  #- wide_growing-10
-  #- wide_growing-15
-  #- wide_growing-20
-  #- wide_growing-25
-  #- wide_growing_independent-5
-  #- wide_growing_independent-10
-  #- wide_growing_independent-15
-  #- wide_growing_independent-20
-  #- wide_growing_independent-25
-  #- substrata_independent
-  #- substrata_independent-2-1
-  #- substrata_independent-2-2
-  #- substrata_independent-3-1
-  #- substrata_independent-3-2
-  #- substrata_independent-3-3
-  #- substrata_independent-4-1
-  #- substrata_independent-4-2
-  #- substrata_independent-4-3
-  #- substrata_independent-4-4
-  #- substrata_independent-5-1
-  #- substrata_independent-5-2
-  #- substrata_independent-5-3
-  #- substrata_independent-5-4
-  #- substrata_independent-5-5
-  #- substrata_dependent
-  #- substrata_dependent-2-1
-  #- substrata_dependent-2-2
-  #- substrata_dependent-3-1
-  #- substrata_dependent-3-2
-  #- substrata_dependent-3-3
-  #- substrata_dependent-4-1
-  #- substrata_dependent-4-2
-  #- substrata_dependent-4-3
-  #- substrata_dependent-4-4
-  #- substrata_dependent-5-1
-  #- substrata_dependent-5-2
-  #- substrata_dependent-5-3
-  #- substrata_dependent-5-4
-  #- substrata_dependent-5-5
-  #- substrata_skinny_dependent
-  #- substrata_skinny_dependent-2-1
-  #- substrata_skinny_dependent-2-2
-  #- substrata_skinny_dependent-3-1
-  #- substrata_skinny_dependent-3-2
-  #- substrata_skinny_dependent-3-3
-  #- substrata_skinny_dependent-4-1
-  #- substrata_skinny_dependent-4-2
-  #- substrata_skinny_dependent-4-3
-  #- substrata_skinny_dependent-4-4
-  #- substrata_skinny_dependent-5-1
-  #- substrata_skinny_dependent-5-2
-  #- substrata_skinny_dependent-5-3
-  #- substrata_skinny_dependent-5-4
-  #- substrata_skinny_dependent-5-5
-  #- nonidentifiability_example_small
-  #- nonidentifiability_example_medium
+    #  - kosovo
+    #  - sim1
+    #  - sim2
+    #  - sim3
+    #  - sim4
+    #  - sim5
+    #  - wide3_small
+    #  - wide3_medium
+    #  - wide3_large
+    #  - wide_growing-5
+    #  - wide_growing-10
+    #  - wide_growing-15
+    #  - wide_growing-20
+    #  - wide_growing-25
+    #  - wide_growing_independent-5
+    #  - wide_growing_independent-10
+    #  - wide_growing_independent-15
+    #  - wide_growing_independent-20
+    #  - wide_growing_independent-25
+    #  - substrata_independent
+    #  - substrata_independent-2-1
+    #  - substrata_independent-2-2
+    #  - substrata_independent-3-1
+    #  - substrata_independent-3-2
+    #  - substrata_independent-3-3
+    #  - substrata_independent-4-1
+    #  - substrata_independent-4-2
+    #  - substrata_independent-4-3
+    #  - substrata_independent-4-4
+    #  - substrata_independent-5-1
+    #  - substrata_independent-5-2
+    #  - substrata_independent-5-3
+    #  - substrata_independent-5-4
+    #  - substrata_independent-5-5
+    #  - substrata_dependent
+    #  - substrata_dependent-2-1
+    #  - substrata_dependent-2-2
+    #  - substrata_dependent-3-1
+    #  - substrata_dependent-3-2
+    #  - substrata_dependent-3-3
+    #  - substrata_dependent-4-1
+    #  - substrata_dependent-4-2
+    #  - substrata_dependent-4-3
+    #  - substrata_dependent-4-4
+    #  - substrata_dependent-5-1
+    #  - substrata_dependent-5-2
+    #  - substrata_dependent-5-3
+    #  - substrata_dependent-5-4
+    #  - substrata_dependent-5-5
+    #  - substrata_skinny_dependent
+    #  - substrata_skinny_dependent-2-1
+    #  - substrata_skinny_dependent-2-2
+    #  - substrata_skinny_dependent-3-1
+    #  - substrata_skinny_dependent-3-2
+    #  - substrata_skinny_dependent-3-3
+    #  - substrata_skinny_dependent-4-1
+    #  - substrata_skinny_dependent-4-2
+    #  - substrata_skinny_dependent-4-3
+    #  - substrata_skinny_dependent-4-4
+    #  - substrata_skinny_dependent-5-1
+    #  - substrata_skinny_dependent-5-2
+    #  - substrata_skinny_dependent-5-3
+    #  - substrata_skinny_dependent-5-4
+    #  - substrata_skinny_dependent-5-5
+    #  - nonidentifiability_example_small
+    #  - nonidentifiability_example_medium
   - CO_strata_g1
   - CO_strata_g2
   - CO_strata_g3
@@ -92,7 +88,17 @@ datasets:
   - CO_strata_g19
   - CO_strata_g20
   - CO_strata_g21
+  - CO_strata_g21_00
+  - CO_strata_g21_01
+  - CO_strata_g21_02
+  - CO_strata_g21_03
+  - CO_strata_g21_04
   - CO_strata_g22
+  - CO_strata_g22_95
+  - CO_strata_g22_96
+  - CO_strata_g22_97
+  - CO_strata_g22_98
+  - CO_strata_g22_99
   - CO_strata_g23
   - CO_strata_g24
   - CO_superstrata_g1-g2
@@ -116,10 +122,10 @@ models:
       - 5
 settings:
   K: 20
-  n_iters: 25000
-  chains: 4
-  warmup: 5000
-  adapt_delta: 0.8
+  n_iters: 1000000
+  chains: 8
+  warmup: 100000
+  adapt_delta: 0.95
 R_settings:
   a_alpha: 0.25
   b_alpha: 0.25
@@ -128,7 +134,7 @@ R_settings:
   K: 20
   trace: FALSE
   burnin: 50000
-  n_iters: 50000
+  n_iters: 5000000
 alpha_sweep:
   dataset: sim5
   model: LCMCR_5_fixed_alpha

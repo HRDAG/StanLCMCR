@@ -60,7 +60,10 @@ for (j in 1:length(dataset_names)) {
     }
 }
 
-df_estimates_non_family <- df_estimates |> filter(is.na(family)) |> 
+#df_estimates_non_family <- df_estimates |> filter(is.na(family)) |> 
+#    select(-c(family))
+
+df_estimates_non_family <- df_estimates |>
     select(-c(family))
 
 print(colnames(df_estimates_non_family))
