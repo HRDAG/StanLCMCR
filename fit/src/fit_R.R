@@ -19,13 +19,27 @@ for (i in 1:length(datasets)) {
         model_q975s <- c(5)
     }
 
+    # Always run once with uniform priors (without passing in q975 argument)
+    run_name <- paste("R_unif", dataset_name, sep="_")
+
+    slurm_args <- c("--ntasks=1", "--nodes=1", "--cpus-per-task=1", paste("--output=", here("fit", "logs", paste(run_name, "_R.log", sep="")), sep=""))
+    rscript_args <- c("Rscript", here("fit/src/fit_stan_cli.R"), "--model", "R", "--dataset", dataset_name)
+
+    if (fit_params$use_slurm) {
+        print("Running slurm")
+        system2("srun", c(slurm_args, rscript_args), wait=FALSE)
+    } else {
+        print("Running non-slurm")
+        system2("Rscript", rscript_args)
+    }
+
     for (q975 in model_q975s) {
         run_name <- paste("R", q975, dataset_name, sep="_")
 
-        rscript_args <- c(here("fit/src/fit_stan_cli.R"), "--model", "R", "--dataset", dataset_name, "--q975", q975)
+        rscript_args <- c("Rscript", here("fit/src/fit_stan_cli.R"), "--model", "R", "--dataset", dataset_name, "--q975", q975)
 
         if (fit_params$use_slurm) {
-            system2("srun", c("--ntasks=1", "--nodes=1", paste("--cpus-per-task=", fit_params$settings$chains, sep=""), "Rscript", rscript_args), wait=FALSE)
+            system2("srun", c(slurm_args, rscript_args), wait=FALSE)
         } else {
             system2("Rscript", rscript_args)
         }
