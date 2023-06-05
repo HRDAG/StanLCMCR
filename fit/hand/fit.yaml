@@ -134,8 +134,8 @@ R_settings:
   thinning: 100
   K: 20
   trace: FALSE
-  burnin: 50000
-  n_iters: 1000000
+  burnin: 10000
+  samples: 10000
   prior_q025: 1.1
   prior_q975:
       - 1.5

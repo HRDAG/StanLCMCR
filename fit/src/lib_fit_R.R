@@ -6,6 +6,9 @@ fit_R <- function(data, a_alpha=0.25, b_alpha=0.25, seed=1, buffer_size = 10000,
     a_lambda = 1
     b_lambda = 1
 
+    data.factor <- data.frame(lapply(data, factor)) |> 
+        select_if(function(col) length(levels(col)) > 1)
+
     J <- ncol(data)
 
     if (!is.null(upper) && !is.null(lower)) {
@@ -14,8 +17,6 @@ fit_R <- function(data, a_alpha=0.25, b_alpha=0.25, seed=1, buffer_size = 10000,
       b_lambda = recovered$b
     }
 
-    data.factor <- data.frame(lapply(data, factor)) |> 
-        select_if(function(col) length(levels(col)) > 1)
     R_sampler <- lcmCR(data.factor, K=K, a_alpha=a_alpha, b_alpha=b_alpha, seed=seed, buffer_size = buffer_size, thinning = thinning, in_list_label=in_list_label, not_in_list_label=not_in_list_label, a_lambda=a_lambda, b_lambda=b_lambda)
 
     if (trace) {

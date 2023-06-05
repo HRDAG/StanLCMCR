@@ -37,7 +37,7 @@ if (model == "R") {
           K=R_settings$K,
           trace=R_settings$trace,
           burnin=R_settings$burnin,
-          samples=R_settings$n_iters)
+          samples=R_settings$samples)
 
     estimates <- results[["estimates"]]
     sampler <- results[["sampler"]]

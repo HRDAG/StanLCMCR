@@ -1,6 +1,10 @@
 ---
 seed: 100
 iterations: 5000
+R_priors:
+  - 1.5
+  - 3
+  - 5
 models:
   - LCMCR_4_5
   - LCMCR_7_1.5
@@ -49,15 +53,15 @@ datasets:
 #    - LCMCR_2
 #    - LCMCR_3
 #    - LCMCR_4
-  - 
-    name: wide3_small
-    ground_truth: 300
-  - 
-    name: wide3_medium
-    ground_truth: 600
-  - 
-    name: wide3_large
-    ground_truth: 900
+#  - 
+#    name: wide3_small
+#    ground_truth: 300
+#  - 
+#    name: wide3_medium
+#    ground_truth: 600
+#  - 
+#    name: wide3_large
+#    ground_truth: 900
   - 
     name: wide_growing-5
     ground_truth: 2000
@@ -86,8 +90,8 @@ datasets:
     name: wide_growing_independent-20
     ground_truth: 2000
   - 
-    name: wide_growing_independent-25
-    ground_truth: 2000
+   name: wide_growing_independent-25
+   ground_truth: 2000
   - 
     name: substrata_independent
     ground_truth: 2000

@@ -38,7 +38,7 @@ estimates_superstrata <- estimates_all %>%
 summaries_co <- rbind(summaries_strata, summaries_superstrata)
 estimates_co <- rbind(estimates_strata, estimates_superstrata)
 
-View(summaries_co)
+View(summaries_all)
 
 # Needed to prevent generating Rplots.pdf in current working directory
 # pdf(NULL)
@@ -49,18 +49,35 @@ View(summaries_co)
 
 summaries_co %>%
   filter(Dataset %in% c("CO_strata_g21", "CO_strata-g21-combined", "CO_strata_g22", "CO_strata-g22-combined")) %>%
-  filter(model != "LCMCR_4_5") %>%
   mutate(model = recode_factor(model, R="R"), 
+         priors = recode_factor(priors, Uniform="Uniform"),
          type=recode_factor(type, Substrata="Substrata"),
          family=substr(strata, 1, 3)) %>%
-         #strata=recode_factor(strata, "g1-g2"="g1-g2", "g3-g6"="g3-g6", "g7-g9"="g7-g9", "g10-g12"="g10-g12")) %>%
-  ggplot(aes(x=model, y=q500, ymin=q025, ymax=q975, color=type)) +
+  #strata=recode_factor(strata, "g1-g2"="g1-g2", "g3-g6"="g3-g6", "g7-g9"="g7-g9", "g10-g12"="g10-g12")) %>%
+  ggplot(aes(x=priors, y=q500, ymin=q025, ymax=q975, color=type)) +
   geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
   geom_point(position=position_dodge(width=0.3)) +
   geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
   geom_point(aes(y=q975), position=position_dodge(width=0.3), shape=1) +
   labs(x="Model", y="Estimates") +
-  facet_grid(family ~ ., scales = "free_y") +
+  facet_grid(family ~ model, scales = "free_y") +
+  theme(legend.position = "top")
+
+# Flipped, for diagnosing R vs Stan
+summaries_co %>%
+  filter(Dataset %in% c("CO_strata_g21", "CO_strata-g21-combined", "CO_strata_g22", "CO_strata-g22-combined")) %>%
+  mutate(model = recode_factor(model, R="R"), 
+         priors = recode_factor(priors, Uniform="Uniform"),
+         type=recode_factor(type, Substrata="Substrata"),
+         family=substr(strata, 1, 3)) %>%
+         #strata=recode_factor(strata, "g1-g2"="g1-g2", "g3-g6"="g3-g6", "g7-g9"="g7-g9", "g10-g12"="g10-g12")) %>%
+  ggplot(aes(x=priors, y=q500, ymin=q025, ymax=q975, color=model)) +
+  geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
+  geom_point(position=position_dodge(width=0.3)) +
+  geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
+  geom_point(aes(y=q975), position=position_dodge(width=0.3), shape=1) +
+  labs(x="Model", y="Estimates") +
+  facet_grid(family ~ type, scales = "free_y") +
   theme(legend.position = "top")
 
 ###############################################
@@ -70,33 +87,37 @@ summaries_co %>%
 summaries_co %>%
   filter(type %in% c("Stratified", "Aggregated")) %>%
   mutate(model = recode_factor(model, R="R"), 
+         priors = recode_factor(priors, Uniform="Uniform"),
          type=recode_factor(type, Stratified="Stratified"), 
          strata=recode_factor(strata, "g1-g2"="g1-g2", "g3-g6"="g3-g6", "g7-g9"="g7-g9", "g10-g12"="g10-g12")) %>%
-  ggplot(aes(x=model, y=q500, ymin=q025, ymax=q975, color=type)) +
+  ggplot(aes(x=priors, y=q500, ymin=q025, ymax=q975, color=type)) +
   geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
   geom_point(position=position_dodge(width=0.3)) +
   geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
   geom_point(aes(y=q975), position=position_dodge(width=0.3), shape=1) +
-  labs(x="Model", y="Estimates") +
-  facet_grid(strata ~ ., scales = "free_y") +
+  labs(x="Priors", y="Estimates") +
+  facet_grid(strata ~ model, scales = "free_y") +
   theme(legend.position = "top")
+
 
 ggsave(here("write", "output", "posterior-CIs-CO.png"), width=5, height=4)
 
+# Flipped, to diagnose Stan vs. R
 summaries_co %>%
   filter(type %in% c("Stratified", "Aggregated")) %>%
   mutate(model = recode_factor(model, R="R"), 
+         priors = recode_factor(priors, Uniform="Uniform"),
          type=recode_factor(type, Stratified="Stratified"), 
          strata=recode_factor(strata, "g1-g2"="g1-g2", "g3-g6"="g3-g6", "g7-g9"="g7-g9", "g10-g12"="g10-g12")) %>%
-  filter(model %in% c("R", "LCMCR_7_1.5", "LCMCR_7_3", "LCMCR_7_5")) %>%
-  ggplot(aes(x=model, y=q500, ymin=q025, ymax=q975, color=type)) +
+  ggplot(aes(x=priors, y=q500, ymin=q025, ymax=q975, color=model)) +
   geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
   geom_point(position=position_dodge(width=0.3)) +
   geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
   geom_point(aes(y=q975), position=position_dodge(width=0.3), shape=1) +
-  labs(x="Model", y="Estimates") +
-  facet_grid(strata ~ ., scales = "free_y") +
+  labs(x="Priors", y="Estimates") +
+  facet_grid(strata ~ type, scales = "free_y") +
   theme(legend.position = "top")
+
 
 ###############################################
 # Plot posterior densities (R vs. 5)
@@ -104,16 +125,17 @@ summaries_co %>%
 
 estimates_co %>%
   mutate(model = recode_factor(model, R="R"),
+         priors = recode_factor(priors, Uniform="Uniform"),
          type=recode_factor(type, Stratified="Stratified"), 
          strata=recode_factor(strata, "g1-g2"="g1-g2", "g3-g6"="g3-g6", "g7-g9"="g7-g9", "g10-g12"="g10-g12")) %>%
-  filter(model %in% c("R", "LCMCR_7_5")) %>%
+  filter(priors %in% c("Uniform", "(1.1, 5)")) %>%
   ggplot(aes(x=model, y=estimates, fill=type)) +
   geom_violin(position=position_dodge(width=0.2), alpha=0.5, draw_quantiles=c(0.5)) +
   #geom_line(data=summaries_substrata_dep %>%
   #            mutate(model = recode_factor(model, R="R", `Priors (5)` = "Priors (5)")) |>
   #            filter(model %in% c("R", "Priors (5)")), aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model)) +
   theme(legend.position = "top") +
-  facet_grid(strata ~ ., scales = "free_y") +
+  facet_grid(strata ~ model, scales = "free_y") +
   labs(x="Model", y="Estimates")
 
 ###############################################
@@ -130,8 +152,7 @@ fit_model_CO_g13_g17 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_CO_supe
 fit_model_CO_g20_g24 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_CO_superstrata_g20-24.rds"))
 fit_model_CO_g13_g17_R_ests <- readRDS(here("write", "input", "fit", "R_CO_superstrata_g13-g17_estimates.rds"))
 
-fit_model_CO_g1_R_model <- readRDS(here("write", "input", "fit", "R_CO_strata_g1_model.rds"))
-fit_model_CO_g1_R_model
+fit_model_CO_g21_R_3 <- readRDS(here("write", "input", "fit", "R_3_CO_strata_g21_estimates.rds"))
 
 # Substratification of g21
 fit_model_CO_g21 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_CO_strata_g21.rds"))
@@ -140,6 +161,9 @@ fit_model_CO_g21_01 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_CO_strat
 fit_model_CO_g21_02 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_CO_strata_g21_02.rds"))
 fit_model_CO_g21_03 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_CO_strata_g21_03.rds"))
 fit_model_CO_g21_04 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_CO_strata_g21_04.rds"))
+
+fit_model_CO_g21_LCMCR_7_3 <- readRDS(here("write", "input", "fit", "LCMCR_7_3_CO_strata_g21.rds"))
+
 
 fit_model_CO_g22 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_CO_strata_g22.rds"))
 
@@ -204,8 +228,10 @@ ggplot(df.CO_g13_g17) +
 
 fit_model_CO_g1$diagnostic_summary()
 
-plot.chain.diagnostics.grid(fit_model_CO_g21, c("N"), chains=1:8)
-plot.chain.diagnostics.grid(fit_model_CO_g21, c("pi[1]", "pi[2]", "pi[3]", "pi[4]", "pi[5]", "pi[6]"), chains=1:8)
+plot.chain.diagnostics.grid(fit_model_CO_g21, c("N"), chains=1:4)
+plot.chain.diagnostics.grid(fit_model_CO_g21_LCMCR_7_3, c("N"), chains=1:4)
+plot(fit_model_CO_g21_R_3, type="l")
+
 plot.chain.diagnostics.grid(fit_model_CO_g22, c("N"), chains=1:8)
 
 
