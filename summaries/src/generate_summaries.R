@@ -67,7 +67,15 @@ for (j in 1:length(dataset_names)) {
             priors = paste("(1.1, ", substr(model_name, 9, 100), ")", sep="")
         }
 
-        fitted <- readRDS(here("summaries", "input", "fit", paste(model_name, "_", dataset_name, ".rds", sep="")))
+
+        fn <- here("summaries", "input", "fit", paste(model_name, "_", dataset_name, ".rds", sep=""))
+
+        if (!file.exists(fn)) {
+            print(paste("Warning:", fn, "does not exist", sep=" "))
+            next
+        }
+
+        fitted <- readRDS(fn)
 
         estimates_df <- as.data.frame(fitted$draws("N"))
         estimates <- apply(estimates_df, 1, base::sample, size = 1)
@@ -134,7 +142,9 @@ df_summaries <- df_estimates |> group_by(model, priors, Dataset) |>
       ) |> 
            merge(df_divergences_cleaned, by=c("Dataset", "model", "priors"), all=TRUE)
 
+df_estimates_thinned <- df_estimates |> filter(i %% 10 == 0)
 
+write.csv(df_estimates_thinned, here("summaries", "output", "estimates_thinned.csv"), row.names=FALSE)
 write.csv(df_estimates, here("summaries", "output", "estimates.csv"), row.names=FALSE)
 write.csv(df_summaries, here("summaries", "output", "summaries.csv"), row.names=FALSE)
 

@@ -62,6 +62,89 @@ datasets:
 #  - 
 #    name: wide3_large
 #    ground_truth: 900
+  -
+    name: CO_strata_s1_1
+    family: CO_strata_s1a-combined
+  -
+    name: CO_strata_s1_2
+    family: CO_strata_s1a-combined
+  -
+    name: CO_strata_s1_3
+    family: CO_strata_s1a-combined
+  -
+    name: CO_strata_s1_4
+    family: CO_strata_s1a-combined
+  -
+    name: CO_strata_s1_5
+    family: CO_strata_s1a-combined
+  -
+    name: CO_strata_s1_6
+    family: CO_strata_s1a-combined
+  -
+    name: CO_strata_s1_7
+    family: CO_strata_s1b-combined
+  -
+    name: CO_strata_s1_8
+    family: CO_strata_s1b-combined
+  -
+    name: CO_strata_s1_9
+    family: CO_strata_s1b-combined
+  -
+    name: CO_strata_s1_10
+    family: CO_strata_s1b-combined
+  -
+    name: CO_strata_s1_11
+    family: CO_strata_s1b-combined
+  -
+    name: CO_strata_s1_12
+    family: CO_strata_s1b-combined
+  -
+    name: CO_strata_s2_1
+    family: CO_strata_s2a-combined
+  -
+    name: CO_strata_s2_2
+    family: CO_strata_s2a-combined
+  -
+    name: CO_strata_s2_3
+    family: CO_strata_s2a-combined
+  -
+    name: CO_strata_s2_4
+    family: CO_strata_s2a-combined
+  -
+    name: CO_strata_s2_5
+    family: CO_strata_s2a-combined
+  -
+    name: CO_strata_s2_6
+    family: CO_strata_s2a-combined
+  -
+    name: CO_strata_s2_7
+    family: CO_strata_s2b-combined
+  -
+    name: CO_strata_s2_8
+    family: CO_strata_s2b-combined
+  -
+    name: CO_strata_s2_9
+    family: CO_strata_s2b-combined
+  -
+    name: CO_strata_s2_10
+    family: CO_strata_s2b-combined
+  -
+    name: CO_strata_s2_11
+    family: CO_strata_s2b-combined
+  -
+    name: CO_strata_s2_12
+    family: CO_strata_s2b-combined
+  - name: CO_superstrata_g1-g2
+  - name: CO_superstrata_g3-g6
+  - name: CO_superstrata_g7-g9
+  - name: CO_superstrata_g10-g12
+  - name: CO_superstrata_g13-g17
+  - name: CO_superstrata_g18-g19
+  - name: CO_superstrata_g20-24
+  - name: CO_superstrata_s1a
+  - name: CO_superstrata_s1b
+  - name: CO_superstrata_s2a
+  - name: CO_superstrata_s2b
   - 
     name: wide_growing-5
     ground_truth: 2000
@@ -271,113 +354,106 @@ datasets:
     ground_truth: 400
   -
     name: CO_strata_g1
-    family: CO_strata-g1-g2
+    family: CO_strata_g1-g2
   -
     name: CO_strata_g2
-    family: CO_strata-g1-g2
+    family: CO_strata_g1-g2
   -
     name: CO_strata_g3
-    family: CO_strata-g3-g6
+    family: CO_strata_g3-g6
   -
     name: CO_strata_g4
-    family: CO_strata-g3-g6
+    family: CO_strata_g3-g6
   -
     name: CO_strata_g5
-    family: CO_strata-g3-g6
+    family: CO_strata_g3-g6
   -
     name: CO_strata_g6
-    family: CO_strata-g3-g6
+    family: CO_strata_g3-g6
   -
     name: CO_strata_g7
-    family: CO_strata-g7-g9
+    family: CO_strata_g7-g9
   -
     name: CO_strata_g8
-    family: CO_strata-g7-g9
+    family: CO_strata_g7-g9
   -
     name: CO_strata_g9
-    family: CO_strata-g7-g9
+    family: CO_strata_g7-g9
   -
     name: CO_strata_g10
-    family: CO_strata-g10-g12
+    family: CO_strata_g10-g12
   -
     name: CO_strata_g11
-    family: CO_strata-g10-g12
+    family: CO_strata_g10-g12
   -
     name: CO_strata_g12
-    family: CO_strata-g10-g12
+    family: CO_strata_g10-g12
   -
     name: CO_strata_g13
-    family: CO_strata-g13-g17
+    family: CO_strata_g13-g17
   -
     name: CO_strata_g14
-    family: CO_strata-g13-g17
+    family: CO_strata_g13-g17
   -
     name: CO_strata_g15
-    family: CO_strata-g13-g17
+    family: CO_strata_g13-g17
   -
     name: CO_strata_g16
-    family: CO_strata-g13-g17
+    family: CO_strata_g13-g17
   -
     name: CO_strata_g17
-    family: CO_strata-g13-g17
+    family: CO_strata_g13-g17
   -
     name: CO_strata_g18
-    family: CO_strata-g18-g19
+    family: CO_strata_g18-g19
   -
     name: CO_strata_g19
-    family: CO_strata-g18-g19
+    family: CO_strata_g18-g19
   -
     name: CO_strata_g20
-    family: CO_strata-g20-24
+    family: CO_strata_g20-24
   -
     name: CO_strata_g21
-    family: CO_strata-g20-24
+    family: CO_strata_g20-24
   -
     name: CO_strata_g22
-    family: CO_strata-g20-24
+    family: CO_strata_g20-24
   -
     name: CO_strata_g23
-    family: CO_strata-g20-24
+    family: CO_strata_g20-24
   -
     name: CO_strata_g24
-    family: CO_strata-g20-24
-  - name: CO_superstrata_g1-g2
-  - name: CO_superstrata_g3-g6
-  - name: CO_superstrata_g7-g9
-  - name: CO_superstrata_g10-g12
-  - name: CO_superstrata_g13-g17
-  - name: CO_superstrata_g18-g19
-  - name: CO_superstrata_g20-24
+    family: CO_strata_g20-24
   -
     name: CO_strata_g21_00
-    family: CO_strata-g21-combined
+    family: CO_strata_g21-combined
   -
     name: CO_strata_g21_01
-    family: CO_strata-g21-combined
+    family: CO_strata_g21-combined
   -
     name: CO_strata_g21_02
-    family: CO_strata-g21-combined
+    family: CO_strata_g21-combined
   -
     name: CO_strata_g21_03
-    family: CO_strata-g21-combined
+    family: CO_strata_g21-combined
   -
     name: CO_strata_g21_04
-    family: CO_strata-g21-combined
+    family: CO_strata_g21-combined
   -
     name: CO_strata_g22_95
-    family: CO_strata-g22-combined
+    family: CO_strata_g22-combined
   -
     name: CO_strata_g22_96
-    family: CO_strata-g22-combined
+    family: CO_strata_g22-combined
   -
     name: CO_strata_g22_97
-    family: CO_strata-g22-combined
+    family: CO_strata_g22-combined
   -
     name: CO_strata_g22_98
-    family: CO_strata-g22-combined
+    family: CO_strata_g22-combined
   -
     name: CO_strata_g22_99
-    family: CO_strata-g22-combined
+    family: CO_strata_g22-combined
 #alpha_sweep:
 #  model: LCMCR_5_fixed_alpha
 #  dataset: sim5
