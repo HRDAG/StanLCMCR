@@ -16,6 +16,7 @@ parser$add_argument("--model", dest="model")
 parser$add_argument("--q025", dest="model_q025", default=1.1, type="double")
 parser$add_argument("--q975", dest="model_q975", default=NULL, type="double")
 parser$add_argument("--dataset", dest="dataset_name")
+parser$add_argument("--use_R_inits", dest="use_R_inits", action="store_true", default=FALSE)
 
 args <- parser$parse_args()
 model <- args$model
@@ -50,7 +51,7 @@ if (model == "R") {
     run_name <- paste(model, model_q975, dataset_name, sep="_")
     fitted_model <- fit_stan(stan_model, df,
                              K=settings$K,
-                             num_iter=settings$num_iter,
+                             num_iter=settings$n_iters,
                              seed=fit_params$seed,
                              chains=settings$chains,
                              warmup=settings$warmup,
@@ -58,7 +59,8 @@ if (model == "R") {
                              output_dir=here("fit", "output"),
                              output_basename=run_name,
                              lower=model_q025,
-                             upper=model_q975)
+                             upper=model_q975,
+                             use_R_inits=R_settings$use_R_inits)
 
     fitted_model$save_object(file = here("fit", "output", paste(run_name, ".rds", sep="")))
 }
