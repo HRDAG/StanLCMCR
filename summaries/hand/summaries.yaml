@@ -49,45 +49,45 @@ datasets:
 #    - LCMCR_2
 #    - LCMCR_3
 #    - LCMCR_4
-  - 
-    name: wide3_small
-    ground_truth: 300
-  - 
-    name: wide3_medium
-    ground_truth: 600
-  - 
-    name: wide3_large
-    ground_truth: 900
-  - 
-    name: wide_growing-5
-    ground_truth: 2000
-  - 
-    name: wide_growing-10
-    ground_truth: 2000
-  - 
-    name: wide_growing-15
-    ground_truth: 2000
-  - 
-    name: wide_growing-20
-    ground_truth: 2000
-  - 
-    name: wide_growing-25
-    ground_truth: 2000
-  - 
-    name: wide_growing_independent-5
-    ground_truth: 2000
-  - 
-    name: wide_growing_independent-10
-    ground_truth: 2000
-  - 
-    name: wide_growing_independent-15
-    ground_truth: 2000
-  - 
-    name: wide_growing_independent-20
-    ground_truth: 2000
-  - 
-    name: wide_growing_independent-25
-    ground_truth: 2000
+#  - 
+#    name: wide3_small
+#    ground_truth: 300
+#  - 
+#    name: wide3_medium
+#    ground_truth: 600
+#  - 
+#    name: wide3_large
+#    ground_truth: 900
+#  - 
+#    name: wide_growing-5
+#    ground_truth: 2000
+#  - 
+#    name: wide_growing-10
+#    ground_truth: 2000
+#  - 
+#    name: wide_growing-15
+#    ground_truth: 2000
+#  - 
+#    name: wide_growing-20
+#    ground_truth: 2000
+#  - 
+#    name: wide_growing-25
+#    ground_truth: 2000
+#  - 
+#    name: wide_growing_independent-5
+#    ground_truth: 2000
+#  - 
+#    name: wide_growing_independent-10
+#    ground_truth: 2000
+#  - 
+#    name: wide_growing_independent-15
+#    ground_truth: 2000
+#  - 
+#    name: wide_growing_independent-20
+#    ground_truth: 2000
+#  - 
+#    name: wide_growing_independent-25
+#    ground_truth: 2000
   - 
     name: substrata_independent
     ground_truth: 2000
@@ -374,12 +374,3 @@ datasets:
   -
     name: CO_strata_g22_99
     family: CO_strata-g22-combined
-#alpha_sweep:
-#  model: LCMCR_5_fixed_alpha
-#  dataset: sim5
-#  alphas:
-#    - 0.1
-#    - 0.5
-#    - 1
-#    - 2
-#    - 10

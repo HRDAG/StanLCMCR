@@ -101,3 +101,14 @@ ggplot(fig1_data, aes(x=estimates, linetype=type, color=type, fill=type)) +
 ###############################################
 # Fig 2. Showing the problem exists in simulations with more strata
 ###############################################
+
+estimates_substrata_dep %>%
+  filter(model == "R", priors %in% c("Uniform", "(1.1, 5)")) %>%
+  mutate(n_substrata = as.factor(n_substrata)) %>%
+  ggplot(aes(x=n_substrata, y=estimates, color=priors)) +
+    geom_violin(alpha=0.5, draw_quantiles=c(0.5), position=position_dodge(width=0.2)) +
+    geom_hline(yintercept = estimates_substrata_dep$observed[1], linetype="dashed") +
+    geom_hline(yintercept = estimates_substrata_dep$truth[1], linetype="solid") +
+    labs(x="Number of substrata", y="Estimates") +
+    theme(legend.position = "top")
+
