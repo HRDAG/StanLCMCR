@@ -13,6 +13,7 @@ if (!require("cmdstanr")) {
 
 summaries_all <- read.csv(here("write", "input", "summaries", "summaries.csv")) 
 estimates_all <- read.csv(here("write", "input", "summaries", "estimates.csv")) 
+estimates_thin <- estimates_all %>% filter(i %% 10 == 0)
 
 summaries_strata <- summaries_all %>%
   filter(grepl("CO_strata", Dataset)) %>%
@@ -28,7 +29,8 @@ summaries_superstrata <- summaries_all %>%
 estimates_strata <- estimates_all %>%
   filter(grepl("CO_strata", Dataset)) %>%
   mutate(strata=substr(Dataset, 11, 100),
-         type="Stratified")
+         type=ifelse(grepl("[-_]", strata), 
+                     ifelse(grepl("-[^c]", strata), "Stratified", "Substrata"), "Original"))
 
 estimates_superstrata <- estimates_all %>%
   filter(grepl("CO_superstrata", Dataset)) %>%
@@ -42,6 +44,42 @@ View(summaries_co)
 
 # Needed to prevent generating Rplots.pdf in current working directory
 # pdf(NULL)
+
+
+###############################################
+# s1a, s1b, s2a, and s2b (our custom strata)
+###############################################
+
+summaries_co %>%
+  filter(Dataset %in% c("CO_strata_s1a-combined", "CO_strata_s1b-combined", "CO_strata_s2a-combined", "CO_strata_s2b-combined",
+                        "CO_superstrata_s1a", "CO_superstrata_s1b", "CO_superstrata_s2a", "CO_superstrata_s2b"),
+         model == "R") %>%
+  mutate(priors = recode_factor(priors, Uniform="Uniform"),
+         type=recode_factor(type, Substrata="Substrata"),
+         family=substr(strata, 1, 3)) %>%
+  #strata=recode_factor(strata, "g1-g2"="g1-g2", "g3-g6"="g3-g6", "g7-g9"="g7-g9", "g10-g12"="g10-g12")) %>%
+  ggplot(aes(x=priors, y=q500, ymin=q025, ymax=q975, color=type)) +
+  geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
+  geom_point(position=position_dodge(width=0.3)) +
+  geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
+  geom_point(aes(y=q975), position=position_dodge(width=0.3), shape=1) +
+  labs(x="Model", y="Estimates") +
+  facet_grid(family ~ ., scales = "free_y") +
+  theme(legend.position = "top")
+
+estimates_co %>%
+  filter(Dataset %in% c("CO_strata_s1a-combined", "CO_strata_s1b-combined", "CO_strata_s2a-combined", "CO_strata_s2b-combined",
+                        "CO_superstrata_s1a", "CO_superstrata_s1b", "CO_superstrata_s2a", "CO_superstrata_s2b"),
+         model == "R") %>%
+  mutate(priors = recode_factor(priors, Uniform="Uniform"),
+         type=recode_factor(type, Substrata="Substrata"),
+         family=substr(strata, 1, 3)) %>%
+  ggplot(aes(x=priors, y=estimates, color=type)) +
+  geom_violin(position=position_dodge(width=0.2), alpha=0.5, draw_quantiles=c(0.5)) +
+  labs(x="Model", y="Estimates") +
+  facet_grid(family ~ ., scales = "free_y") +
+  theme(legend.position = "top")
+
 
 ###############################################
 # g21 and g22, aggregated vs separated
@@ -130,8 +168,8 @@ fit_model_CO_g13_g17 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_CO_supe
 fit_model_CO_g20_g24 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_CO_superstrata_g20-24.rds"))
 fit_model_CO_g13_g17_R_ests <- readRDS(here("write", "input", "fit", "R_CO_superstrata_g13-g17_estimates.rds"))
 
-fit_model_CO_g1_R_model <- readRDS(here("write", "input", "fit", "R_CO_strata_g1_model.rds"))
-fit_model_CO_g1_R_model
+fit_model_CO_g21_R_3 <- readRDS(here("write", "input", "fit", "R_3_CO_strata_g21_estimates.rds"))
+fit_model_CO_g21_R_5 <- readRDS(here("write", "input", "fit", "R_5_CO_strata_g21_estimates.rds"))
 
 # Substratification of g21
 fit_model_CO_g21 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_CO_strata_g21.rds"))
@@ -147,7 +185,11 @@ fit_model_CO_g22 <- readRDS(here("write", "input", "fit", "LCMCR_7_5_CO_strata_g
 plot(fit_model_CO_g13_g17_R_ests, type="l")
 plot(fit_model_CO_g1_R, type="l")
 plot(fit_model_CO_g2_R, type="l")
-
+plot(fit_model_CO_g21_R_3, type="l")
+plot(fit_model_CO_g21_R_5, type="l")
+plot(density(fit_model_CO_g21_R_5))
+plot(density(fit_model_CO_g21_R_3[1:4000]))
+lines(density(fit_model_CO_g21_R_3[4000:10000]), col="red")
 
 
 get.trace.dataframe <- function(stan_fit, varnames, chains=c(1, 2, 3, 4)) {

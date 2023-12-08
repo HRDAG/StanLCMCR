@@ -8,7 +8,7 @@ if (!require("cmdstanr")) {
   pacman::p_load(cmdstanr)
 }
 
-theme_set(theme_minimal())
+theme_set(theme_bw())
 
 # Do not draw Rplots.pdf
 pdf(NULL)
@@ -69,6 +69,20 @@ summaries_substrata_skinny_dep <- summaries_all %>%
   mutate(n_substrata=as.numeric(substr(Dataset, 28, 100))) %>%
   mutate(n_substrata=replace_na(n_substrata, 1))
       
+estimates_substrata_ind <- estimates_all %>%
+  mutate(priors = recode_factor(priors, Uniform = "Uniform"),
+         Dataset = replace(Dataset, Dataset == "substrata_independent", "substrata-independent")) %>%
+  filter(grepl("substrata-independent", Dataset)) %>%
+  mutate(n_substrata=as.numeric(substr(Dataset, 23, 23))) %>%
+  mutate(n_substrata=replace_na(n_substrata, 1))
+
+estimates_substrata_dep <- estimates_all %>%
+  mutate(priors = recode_factor(priors, Uniform = "Uniform"),
+         Dataset = replace(Dataset, Dataset == "substrata_dependent", "substrata-dependent")) %>%
+  filter(grepl("substrata-dependent", Dataset)) %>%
+  mutate(n_substrata=as.numeric(substr(Dataset, 21, 100))) %>%
+  mutate(n_substrata=replace_na(n_substrata, 1))
+
 estimates_substrata_skinny_dep <- estimates_all %>%
   mutate(model = recode_factor(model, LCMCR_4_5 = "Uniform", `LCMCR_7_1.5`="Priors (1.5)", LCMCR_7_3 = "Priors (3)", LCMCR_7_5 = "Priors (5)")) %>%
   filter(grepl("substrata-skinny-dependent", Dataset)) %>%
@@ -143,7 +157,8 @@ summaries_substrata_ind %>%
     geom_hline(yintercept=2000, linetype="dashed") +
     labs(x="Number of strata", y="Estimates (N=2000)") +
     scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / 729, name = "Expansion factor") )  +
-    theme(legend.position = "top")
+    theme(legend.position = "top") +
+    facet_grid(model ~ priors, scales="free")
 
 #######
 # Two latent classes: wide
@@ -152,7 +167,7 @@ summaries_substrata_ind %>%
 # Estimates as bars
 plot_substrata_dep_bars <- summaries_substrata_dep %>%
   mutate(model = recode_factor(model, R="R")) %>%
-  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model, linetype=model)) +
+  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=priors, linetype=priors)) +
     geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
     geom_point(position=position_dodge(width=0.3)) +
     geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
@@ -161,15 +176,30 @@ plot_substrata_dep_bars <- summaries_substrata_dep %>%
     geom_hline(yintercept=2000, linetype="dashed") +
     labs(x="Number of strata (25 lists)", y="Estimates (N=2000)") +
     scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / 729, name = "Expansion factor") )  +
-    theme(legend.position = "top")
+    theme(legend.position = "top") +
+  facet_grid(model ~ ., scales="free")
 
 plot_substrata_dep_bars
+
+summaries_substrata_dep %>%
+  mutate(model = recode_factor(model, R="R")) %>%
+  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model, linetype=model)) +
+  geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
+  geom_point(position=position_dodge(width=0.3)) +
+  geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
+  geom_point(aes(y=q975), position=position_dodge(width=0.3), shape=1) +
+  #geom_line(position=position_dodge(width=0.3)) +
+  geom_hline(yintercept=2000, linetype="dashed") +
+  labs(x="Number of strata (25 lists)", y="Estimates (N=2000)") +
+  scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / 729, name = "Expansion factor") )  +
+  theme(legend.position = "top") +
+  facet_grid(priors ~ ., scales="free")
 
 # Estimates as bars
 plot_substrata_dep_two_bars <- summaries_substrata_dep %>%
   mutate(model = recode_factor(model, R="R")) %>%
-  filter(model %in% c("R", "Priors (5)")) %>%
-  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model, linetype=model)) +
+  filter(priors %in% c("(1.1, 1.5)", "(1.1, 5)")) %>%
+  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=priors, linetype=priors)) +
     geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
     geom_point(position=position_dodge(width=0.3)) +
     geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
@@ -178,9 +208,25 @@ plot_substrata_dep_two_bars <- summaries_substrata_dep %>%
     geom_hline(yintercept=2000, linetype="dashed") +
     labs(x="Number of strata (25 lists)", y="Estimates (N=2000)") +
     scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / 729, name = "Expansion factor") )  +
-    theme(legend.position = "top")
+    theme(legend.position = "top") +
+    facet_grid(model ~ ., scales="free")
 
 plot_substrata_dep_two_bars
+
+summaries_substrata_dep %>%
+  mutate(model = recode_factor(model, R="R")) %>%
+  filter(priors %in% c("(1.1, 1.5)", "(1.1, 5)")) %>%
+  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model, linetype=model)) +
+  geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
+  geom_point(position=position_dodge(width=0.3)) +
+  geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
+  geom_point(aes(y=q975), position=position_dodge(width=0.3), shape=1) +
+  geom_line(position=position_dodge(width=0.3)) +
+  geom_hline(yintercept=2000, linetype="dashed") +
+  labs(x="Number of strata (25 lists)", y="Estimates (N=2000)") +
+  scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / 729, name = "Expansion factor") )  +
+  theme(legend.position = "top") +
+  facet_grid(priors ~ ., scales="free")
 
 # Estimates as violin plots (R vs. 5)
 plot_substrata_dep_violin <- estimates_substrata_dep %>%
@@ -235,7 +281,7 @@ skinny_observed <- 669
 plot_substrata_skinny_bars <-
   summaries_substrata_skinny_dep %>%
   mutate(model = recode_factor(model, R="R")) %>%
-  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model, linetype=model)) +
+  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=priors, linetype=priors)) +
     geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
     geom_point(position=position_dodge(width=0.3)) +
     geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
@@ -244,9 +290,24 @@ plot_substrata_skinny_bars <-
     geom_hline(yintercept=2000, linetype="dashed") +
     labs(x="Number of strata (4 lists)", y="Estimates (N=2000)") +
     scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / skinny_observed, name = "Expansion factor") )  +
-    theme(legend.position = "top")
+    theme(legend.position = "top") +
+  facet_grid(model ~ ., scales="free")
 
 plot_substrata_skinny_bars
+
+summaries_substrata_skinny_dep %>%
+  mutate(model = recode_factor(model, R="R")) %>%
+  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model, linetype=model)) +
+  geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
+  geom_point(position=position_dodge(width=0.3)) +
+  geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
+  geom_point(aes(y=q975), position=position_dodge(width=0.3), shape=1) +
+  geom_line(position=position_dodge(width=0.3)) +
+  geom_hline(yintercept=2000, linetype="dashed") +
+  labs(x="Number of strata (4 lists)", y="Estimates (N=2000)") +
+  scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / skinny_observed, name = "Expansion factor") )  +
+  theme(legend.position = "top") +
+  facet_grid(priors ~ ., scales="free")
 
 # Estimates as bars
 plot_substrata_skinny_two_bars <- summaries_substrata_skinny_dep %>%
@@ -311,7 +372,7 @@ summaries_substrata_skinny_dep %>%
 ##################
 # Joining together
 ##################
-plot_substrata_skinny_bars / plot_substrata_dep_bars 
+plot_substrata_skinny_bars | plot_substrata_dep_bars 
 ggsave(here("write", "output", "substrata_experiments_all.pdf"), width=6, height=8)
 
 plot_substrata_skinny_two_bars / plot_substrata_dep_two_bars 

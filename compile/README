@@ -1,0 +1,4 @@
+Note: on Fiji (CU compute cluster), need to run
+`module load gcc/7.1.0`
+
+(7.2.0 produces a bug, and earlier versions don't support C++ 14)

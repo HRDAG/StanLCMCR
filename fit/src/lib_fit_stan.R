@@ -9,7 +9,19 @@ if (!require("cmdstanr")) {
 
 source(here("fit", "src", "beta_priors.R"))
 
-fit_stan <- function(model, data, K=10, num_iter=2000, seed=19481210, chains=4, warmup=2000, adapt_delta=0.8, alpha=NULL, output_dir=NULL, output_basename=NULL, lower=1.01, upper=3) {
+get_R_init_vals <- function(data, a_alpha=0.25, b_alpha=0.25, seed=1, buffer_size = 10000, thinning = 100, in_list_label="1", not_in_list_label="0", K=10, trace=FALSE, burnin=10000, samples=2000, lower=NULL, upper=NULL) {
+    R_sampler <- lcmCR(data, K=K, a_alpha=a_alpha, b_alpha=b_alpha, seed=seed, buffer_size = buffer_size, thinning = thinning, in_list_label=in_list_label, not_in_list_label=not_in_list_label, a_lambda=a_lambda, b_lambda=b_lambda)
+
+    init_vals <- list(
+                      N=R_sampler$Get_Param("n"),
+                      alpha=R_sampler$Get_Param("alpha"),
+                      lambda=exp(R_sampler$Get_Param("log_lambdaJK2")[,,1]),
+                      # Get `breaks` from log_nuK
+                  )
+}
+
+fit_stan <- function(model, data, K=10, num_iter=2000, seed=19481210, chains=4, warmup=2000, adapt_delta=0.8, alpha=NULL, output_dir=NULL, output_basename=NULL, lower=1.01, upper=3, use_R_inits=FALSE) {
+  # Note: use_R_inits currently doesn't do anything.
   stan_data_tabular <- data |> 
     group_by_all() |>
     summarize(cell_count = dplyr::n())
