@@ -38,7 +38,7 @@ if (!is.null(models)) {
                 rscript_args <- c(here("fit/src/fit_stan_cli.R"), "--model", model, "--dataset", dataset_name, "--q975", q975)
 
                 if (fit_params$use_slurm) {
-                    system2("srun", c("--ntasks=1", "--nodes=1", paste("--cpus-per-task=", fit_params$settings$chains, sep=""), "Rscript", rscript_args), wait=FALSE)
+                    system2("srun", c("--ntasks=1", "--nodes=1", paste("--cpus-per-task=", fit_params$settings$chains, sep=""), paste("--output=", here("fit", "logs", paste(run_name, ".log", sep="")), sep=""), "Rscript", rscript_args), wait=FALSE)
                 } else {
                     system2("Rscript", rscript_args)
                 }

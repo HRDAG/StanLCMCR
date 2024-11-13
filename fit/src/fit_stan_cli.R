@@ -14,7 +14,7 @@ R_settings <- fit_params$R_settings
 parser <- ArgumentParser(description="Fit the model/dataset combination specified in the arguments")
 parser$add_argument("--model", dest="model")
 parser$add_argument("--q025", dest="model_q025", default=1.1, type="double")
-parser$add_argument("--q975", dest="model_q975", default=5, type="double")
+parser$add_argument("--q975", dest="model_q975", default=NULL, type="double")
 parser$add_argument("--dataset", dest="dataset_name")
 
 args <- parser$parse_args()
@@ -29,21 +29,21 @@ if (model == "R") {
     results <- fit_R(df,
           a_alpha=R_settings$a_alpha,
           b_alpha=R_settings$b_alpha,
-          a_lambda=model_q025,
-          b_lambda=model_q975,
+          lower=model_q025,
+          upper=model_q975,
           seed=fit_params$seed,
           buffer_size=R_settings$buffer_size,
           thinning=R_settings$thinning,
           K=R_settings$K,
           trace=R_settings$trace,
           burnin=R_settings$burnin,
-          samples=R_settings$n_iters)
+          samples=R_settings$samples)
 
     estimates <- results[["estimates"]]
     sampler <- results[["sampler"]]
 
-    saveRDS(estimates, file=here("fit", "output", paste("R", dataset_name, "estimates.rds", sep="_")))
-    saveRDS(sampler, file=here("fit", "output", paste("R", dataset_name, "model.rds", sep="_")))
+    saveRDS(estimates, file=here("fit", "output", paste("R", model_q975, dataset_name, "estimates.rds", sep="_")))
+    saveRDS(sampler, file=here("fit", "output", paste("R", model_q975, dataset_name, "model.rds", sep="_")))
 } else {
     stan_model <- cmdstan_model(exe_file=here("fit", "input", "models", model))
 

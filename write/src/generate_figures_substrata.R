@@ -38,33 +38,33 @@ summaries_all <- read.csv(here("write", "input", "summaries", "summaries.csv"))
 estimates_all <- read.csv(here("write", "input", "summaries", "estimates.csv")) 
 
 summaries_substrata_ind <- summaries_all %>%
-  mutate(model = recode_factor(model, LCMCR_4_5 = "Uniform", `LCMCR_7_1.5`="Priors (1.5)", LCMCR_7_3 = "Priors (3)", LCMCR_7_5 = "Priors (5)")) %>%
+  mutate(priors = recode_factor(priors, Uniform = "Uniform")) %>%
   filter(grepl("substrata-independent", Dataset) | Dataset == "substrata_independent") %>%
   mutate(n_substrata=as.numeric(substr(Dataset, 23, 23))) %>%
   mutate(n_substrata=replace_na(n_substrata, 1))
       
 estimates_substrata_ind <- estimates_all %>%
-  mutate(model = recode_factor(model, LCMCR_4_5 = "Uniform", `LCMCR_7_1.5`="Priors (1.5)", LCMCR_7_3 = "Priors (3)", LCMCR_7_5 = "Priors (5)"),
+  mutate(priors = recode_factor(priors, Uniform = "Uniform"),
         Dataset = replace(Dataset, Dataset == "substrata_independent", "substrata-independent")) %>%
   filter(grepl("substrata-independent", Dataset)) %>%
   mutate(n_substrata=as.numeric(substr(Dataset, 23, 23))) %>%
   mutate(n_substrata=replace_na(n_substrata, 1))
 
 summaries_substrata_dep <- summaries_all %>%
-  mutate(model = recode_factor(model, LCMCR_4_5 = "Uniform", `LCMCR_7_1.5`="Priors (1.5)", LCMCR_7_3 = "Priors (3)", LCMCR_7_5 = "Priors (5)")) %>%
+  mutate(priors = recode_factor(priors, Uniform = "Uniform")) %>%
   filter(grepl("substrata-dependent", Dataset) | Dataset == "substrata_dependent") %>%
   mutate(n_substrata=as.numeric(substr(Dataset, 21, 21))) %>%
   mutate(n_substrata=replace_na(n_substrata, 1))
       
 estimates_substrata_dep <- estimates_all %>%
-  mutate(model = recode_factor(model, LCMCR_4_5 = "Uniform", `LCMCR_7_1.5`="Priors (1.5)", LCMCR_7_3 = "Priors (3)", LCMCR_7_5 = "Priors (5)"),
+  mutate(priors = recode_factor(priors, Uniform = "Uniform"),
         Dataset = replace(Dataset, Dataset == "substrata_dependent", "substrata-dependent")) %>%
   filter(grepl("substrata-dependent", Dataset)) %>%
   mutate(n_substrata=as.numeric(substr(Dataset, 21, 100))) %>%
   mutate(n_substrata=replace_na(n_substrata, 1))
 
 summaries_substrata_skinny_dep <- summaries_all %>%
-  mutate(model = recode_factor(model, LCMCR_4_5 = "Uniform", `LCMCR_7_1.5`="Priors (1.5)", LCMCR_7_3 = "Priors (3)", LCMCR_7_5 = "Priors (5)")) %>%
+  mutate(priors = recode_factor(priors, Uniform = "Uniform")) %>%
   filter(grepl("substrata-skinny-dependent", Dataset)) %>%
   mutate(n_substrata=as.numeric(substr(Dataset, 28, 100))) %>%
   mutate(n_substrata=replace_na(n_substrata, 1))
@@ -84,7 +84,7 @@ estimates_substrata_dep <- estimates_all %>%
   mutate(n_substrata=replace_na(n_substrata, 1))
 
 estimates_substrata_skinny_dep <- estimates_all %>%
-  mutate(model = recode_factor(model, LCMCR_4_5 = "Uniform", `LCMCR_7_1.5`="Priors (1.5)", LCMCR_7_3 = "Priors (3)", LCMCR_7_5 = "Priors (5)")) %>%
+  mutate(priors = recode_factor(priors, Uniform = "Uniform")) %>%
   filter(grepl("substrata-skinny-dependent", Dataset)) %>%
   mutate(n_substrata=as.numeric(substr(Dataset, 28, 100))) %>%
   mutate(n_substrata=replace_na(n_substrata, 1))
@@ -94,20 +94,37 @@ estimates_substrata_skinny_dep <- estimates_all %>%
 ###############################################
 
 summaries_substrata_ind %>%
-  mutate(model = recode_factor(model, R="R", LCMCR_4="LCMCR_4")) %>%
+  mutate(model = recode_factor(model, R="R")) %>%
   ggplot() +
-    geom_point(aes(x = q025_expfac, y=model)) +
-    geom_point(aes(x = q975_expfac, y=model)) +
-    geom_point(aes(x = q500_expfac, y=model), shape=1) +
-    geom_segment(aes(x = q025_expfac, xend=q975_expfac, y=model, yend=model)) +
+    geom_point(aes(x = q025_expfac, y=priors)) +
+    geom_point(aes(x = q975_expfac, y=priors)) +
+    geom_point(aes(x = q500_expfac, y=priors), shape=1) +
+    geom_segment(aes(x = q025_expfac, xend=q975_expfac, y=priors, yend=priors)) +
     geom_vline(aes(xintercept=expfac_truth), linetype="dashed") +
     scale_y_discrete(limits=rev) +
-    stat_density_ridges(data=estimates_substrata_ind, mapping=aes(x=expfacs, y=model), quantile_lines=TRUE, quantiles=c(0.025, 0.5, 0.975), rel_min_height = 0.01, alpha=0.5, scale=1) +
+    stat_density_ridges(data=estimates_substrata_ind, mapping=aes(x=expfacs, y=priors), quantile_lines=TRUE, quantiles=c(0.025, 0.5, 0.975), rel_min_height = 0.01, alpha=0.5, scale=1) +
     coord_cartesian(xlim=c(1, 3.5)) +
     labs(x="Expansion factor", y="") +
     scale_color_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
     theme(legend.position = "top") +
-    facet_wrap(n_substrata ~ ., scales="free", ncol=1)
+    facet_grid(n_substrata ~ model, scales="free")
+
+# To compare R vs Stan
+summaries_substrata_ind %>%
+  mutate(model = recode_factor(model, R="R")) %>%
+  ggplot() +
+  geom_point(aes(x = q025_expfac, y=model)) +
+  geom_point(aes(x = q975_expfac, y=model)) +
+  geom_point(aes(x = q500_expfac, y=model), shape=1) +
+  geom_segment(aes(x = q025_expfac, xend=q975_expfac, y=model, yend=model)) +
+  geom_vline(aes(xintercept=expfac_truth), linetype="dashed") +
+  scale_y_discrete(limits=rev) +
+  stat_density_ridges(data=estimates_substrata_ind, mapping=aes(x=expfacs, y=model), quantile_lines=TRUE, quantiles=c(0.025, 0.5, 0.975), rel_min_height = 0.01, alpha=0.5, scale=1) +
+  coord_cartesian(xlim=c(1, 3.5)) +
+  labs(x="Expansion factor", y="") +
+  scale_color_manual(name = "Model", values = c("firebrick1", "dodgerblue1", "purple", "yellow", "green")) +
+  theme(legend.position = "top") +
+  facet_grid(n_substrata ~ priors, scales="free")
 
 ###############################################
 # Plots of estimates/expfac. vs. number of lists
@@ -120,7 +137,7 @@ summaries_substrata_ind %>%
 # Estimates as bars
 summaries_substrata_ind %>%
   mutate(model = recode_factor(model, R="R")) %>%
-  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=model)) +
+  ggplot(aes(x=n_substrata, y=q500, ymin=q025, ymax=q975, color=priors)) +
     geom_errorbar(width=0.2, position=position_dodge(width=0.3)) +
     geom_point(position=position_dodge(width=0.3)) +
     geom_point(aes(y=q025), position=position_dodge(width=0.3), shape=1) +
@@ -128,7 +145,9 @@ summaries_substrata_ind %>%
     geom_hline(yintercept=2000, linetype="dashed") +
     labs(x="Number of substrata that we break the data into", y="Estimates (N=2000)") +
     scale_y_continuous( "Estimates (N=2000)",  sec.axis = sec_axis(~ . / 729, name = "Expansion factor") ) +
-    theme(legend.position = "top")
+    theme(legend.position = "top") +
+    facet_grid(model ~ ., scales="free")
+
 
 # Estimates as violin plots    
 estimates_substrata_ind %>%

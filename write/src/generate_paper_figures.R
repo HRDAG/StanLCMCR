@@ -111,4 +111,3 @@ estimates_substrata_dep %>%
     geom_hline(yintercept = estimates_substrata_dep$truth[1], linetype="solid") +
     labs(x="Number of substrata", y="Estimates") +
     theme(legend.position = "top")
-

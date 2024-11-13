@@ -1,6 +1,10 @@
 ---
 seed: 100
 iterations: 5000
+R_priors:
+  - 1.5
+  - 3
+  - 5
 models:
   - LCMCR_4_5
   - LCMCR_7_1.5

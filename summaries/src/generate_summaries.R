@@ -7,6 +7,7 @@ summaries_spec <- read_yaml(here("summaries", "hand", "summaries.yaml"))
 
 dataset_names <- summaries_spec$datasets
 global_models <- summaries_spec$models
+R_priors <- summaries_spec$R_priors
 iterations <- as.numeric(summaries_spec$iterations)
 
 ###############################################
@@ -14,7 +15,7 @@ iterations <- as.numeric(summaries_spec$iterations)
 ###############################################
 
 df_divergences <- data.frame(num.divergent=numeric(), prop.divergent=numeric(), model=character(), Dataset=character(), family=character())
-df_estimates <- data.frame(estimates=numeric(), model=character(), Dataset=character(), expfacs=numeric(), family=character(), i=numeric(), truth=numeric(), observed=numeric())
+df_estimates <- data.frame(estimates=numeric(), model=character(), priors=character(), Dataset=character(), expfacs=numeric(), family=character(), i=numeric(), truth=numeric(), observed=numeric())
 
 for (j in 1:length(dataset_names)) {
     dataset <- dataset_names[[j]]
@@ -27,12 +28,29 @@ for (j in 1:length(dataset_names)) {
     # We're just going to count the lines on the original dataset, and subtract one for the header, rather than read the whole thing in again
     observed <- countLines(here("summaries", "input", "import", paste(dataset_name, ".csv", sep=""))) - 1
     
-    R_estimate_fn <- here("summaries", "input", "fit", paste("R_", dataset_name, "_estimates.rds", sep=""))
+    R_estimate_fn <- here("summaries", "input", "fit", paste("R__", dataset_name, "_estimates.rds", sep=""))
 
     if (file.exists(R_estimate_fn)) {
         R_estimates <- readRDS(R_estimate_fn)
         expfacs <- R_estimates / observed
-        est_df <- tibble(estimates=R_estimates, model="R", Dataset=dataset_name, expfacs=expfacs, family=family, observed=observed, truth=truth) |> mutate(i=row_number())
+        est_df <- tibble(estimates=R_estimates, model="R", priors="Uniform", Dataset=dataset_name, expfacs=expfacs, family=family, observed=observed, truth=truth) |> mutate(i=row_number())
+        df_estimates <- bind_rows(df_estimates, est_df)
+    }
+
+    for (i in 1:length(R_priors)) {
+        prior = R_priors[i]
+        model_name <- paste("R", prior, sep="_")
+        fn <- here("summaries", "input", "fit", paste(model_name, "_", dataset_name, "_estimates.rds", sep=""))
+
+        if (!file.exists(fn)) {
+            print(paste("Warning:", fn, "does not exist", sep=" "))
+            next
+        }
+
+        R_estimates <- readRDS(fn)
+
+        expfacs <- R_estimates / observed
+        est_df <- tibble(estimates=R_estimates, model="R", priors=paste("(1.1, ", prior, ")", sep=""), Dataset=dataset_name, expfacs=expfacs, family=family, observed=observed, truth=truth) |> mutate(i=row_number())
         df_estimates <- bind_rows(df_estimates, est_df)
     }
 
@@ -44,6 +62,10 @@ for (j in 1:length(dataset_names)) {
 
     for (i in 1:length(model_names)) {
         model_name <- model_names[i]
+        priors = "Uniform"
+        if (startsWith(model_name, "LCMCR_7")) {
+            priors = paste("(1.1, ", substr(model_name, 9, 100), ")", sep="")
+        }
 
         fitted <- readRDS(here("summaries", "input", "fit", paste(model_name, "_", dataset_name, ".rds", sep="")))
 
@@ -54,8 +76,8 @@ for (j in 1:length(dataset_names)) {
         num.divergent <- sum(fitted$diagnostic_summary(quiet=TRUE)$num_divergent)
         prop.divergent <- num.divergent / (dim(estimates_df)[1] * dim(estimates_df)[2])
 
-        est_df <- tibble(estimates=estimates, model=model_name, Dataset=dataset_name, expfacs=expfacs, family=family, truth=truth, observed=observed) |> mutate(i=row_number())
-        df_divergences <- bind_rows(df_divergences, tibble(num.divergent = num.divergent, prop.divergent = prop.divergent, model=model_name, Dataset=dataset_name, family=family))
+        est_df <- tibble(estimates=estimates, model="Stan", priors=priors, Dataset=dataset_name, expfacs=expfacs, family=family, truth=truth, observed=observed) |> mutate(i=row_number())
+        df_divergences <- bind_rows(df_divergences, tibble(num.divergent = num.divergent, prop.divergent = prop.divergent, model="Stan", priors=priors, Dataset=dataset_name, family=family))
         df_estimates <- bind_rows(df_estimates, est_df)
     }
 }
@@ -71,7 +93,7 @@ print(colnames(df_estimates_non_family))
 df_estimates_family <- df_estimates |> filter(!is.na(family)) |>
     select(-c(Dataset)) |>
     rename(Dataset=family) |>
-    group_by(Dataset, model, i) |>
+    group_by(Dataset, model, priors, i) |>
     summarize(estimates = sum(estimates),
              truth = sum(truth),
              observed = sum(observed),
@@ -87,14 +109,14 @@ print(colnames(df_divergences_family))
 df_divergences_non_family <- df_divergences |> filter(!is.na(family)) |>
                                         select(-c(Dataset)) |>
                                         rename(Dataset = family) |>
-                                        group_by(model, Dataset) |>
+                                        group_by(model, priors, Dataset) |>
                                         summarize(num.divergent = sum(num.divergent),
                                                   prop.divergent = num.divergent / iterations)
 print(colnames(df_divergences_non_family))
 
 df_divergences_cleaned <- rbind(df_divergences_family, df_divergences_non_family)
                                         
-df_summaries <- df_estimates |> group_by(model, Dataset) |>
+df_summaries <- df_estimates |> group_by(model, priors, Dataset) |>
     summarize(
       q025 = quantile(estimates, 0.025),
       q500 = quantile(estimates, 0.5),
@@ -110,7 +132,7 @@ df_summaries <- df_estimates |> group_by(model, Dataset) |>
       observed = mean(observed),
       expfac_truth = truth / observed
       ) |> 
-           merge(df_divergences_cleaned, by=c("Dataset", "model"), all=TRUE)
+           merge(df_divergences_cleaned, by=c("Dataset", "model", "priors"), all=TRUE)
 
 
 write.csv(df_estimates, here("summaries", "output", "estimates.csv"), row.names=FALSE)
