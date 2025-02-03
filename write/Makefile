@@ -1,8 +1,12 @@
 .PHONY: clean
 
-all: output/figures.touch output/blogpost.html output/diagnostics/traceplots.pdf
+all: output/figures.touch
 
-output/figures.touch: input src/generate_figures.R src/generate_figures_CO.R src/generate_figures_simulations_wide.R
+output/figures.touch: input src/generate_paper_figures.R
+	Rscript src/generate_paper_figures.R
+	touch output/figures.touch
+
+output/old_figures.touch: input src/generate_figures.R src/generate_figures_CO.R src/generate_figures_simulations_wide.R
 	Rscript src/generate_figures.R
 	Rscript src/generate_figures_CO.R
 	Rscript src/generate_figures_simulations_wide.R
