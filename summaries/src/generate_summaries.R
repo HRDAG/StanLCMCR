@@ -23,10 +23,10 @@ for (j in 1:length(dataset_names)) {
     truth <- dataset$ground_truth
     family <- ifelse(is.null(dataset$family), NA, dataset$family)
 
-    print(c(dataset_name, family))
-
     # We're just going to count the lines on the original dataset, and subtract one for the header, rather than read the whole thing in again
     observed <- countLines(here("summaries", "input", "import", paste(dataset_name, ".csv", sep=""))) - 1
+
+    print(c(dataset_name, family, observed))
     
     R_estimate_fn <- here("summaries", "input", "fit", paste("R__", dataset_name, "_estimates.rds", sep=""))
 
