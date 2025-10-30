@@ -4,16 +4,8 @@ pacman::p_load(here, tidyverse, scales, patchwork, ggridges, magrittr, LCMCR, co
 
 theme_set(theme_bw())
 
-# cmdstanR needed for trace plots
-# also, custom repository
-if (!require("cmdstanr")) {
-  install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
-  pacman::p_load(cmdstanr)
-}
-
 summaries_all <- read.csv(here("write", "input", "summaries", "summaries.csv")) 
 estimates_all <- read.csv(here("write", "input", "summaries", "estimates.csv")) 
-estimates_thin <- estimates_all %>% filter(i %% 10 == 0)
 
 summaries_strata <- summaries_all %>%
   filter(grepl("CO_strata", Dataset)) %>%
