@@ -422,6 +422,198 @@ strata:
       yy_hecho_start: 2005
       yy_hecho_end: 2009
       sexo: MUJER
+  -
+    stratum: s1_1
+    good: false
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      yymm_hecho: 200101
+      p_str: PARA
+  -
+    stratum: s1_2
+    good: false
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      yymm_hecho: 200102
+      p_str: PARA
+  -
+    stratum: s1_3
+    good: false
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      yymm_hecho: 200103
+      p_str: PARA
+  -
+    stratum: s1_4
+    good: false
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      yymm_hecho: 200104
+      p_str: PARA
+  -
+    stratum: s1_5
+    good: false
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      yymm_hecho: 200105
+      p_str: PARA
+  -
+    stratum: s1_6
+    good: false
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      yymm_hecho: 200106
+      p_str: PARA
+  -
+    stratum: s1_7
+    good: false
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      yymm_hecho: 200107
+      p_str: PARA
+  -
+    stratum: s1_8
+    good: false
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      yymm_hecho: 200108
+      p_str: PARA
+  -
+    stratum: s1_9
+    good: false
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      yymm_hecho: 200109
+      p_str: PARA
+  -
+    stratum: s1_10
+    good: false
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      yymm_hecho: 200110
+      p_str: PARA
+  -
+    stratum: s1_11
+    good: false
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      yymm_hecho: 200111
+      p_str: PARA
+  -
+    stratum: s1_12
+    good: false
+    criteria:
+      yy_hecho_start: 2001
+      yy_hecho_end: 2001
+      yymm_hecho: 200112
+      p_str: PARA
+  -
+    stratum: s2_1
+    good: false
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      yymm_hecho: 200201
+      p_str: PARA
+  -
+    stratum: s2_2
+    good: false
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      yymm_hecho: 200202
+      p_str: PARA
+  -
+    stratum: s2_3
+    good: false
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      yymm_hecho: 200203
+      p_str: PARA
+  -
+    stratum: s2_4
+    good: false
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      yymm_hecho: 200204
+      p_str: PARA
+  -
+    stratum: s2_5
+    good: false
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      yymm_hecho: 200205
+      p_str: PARA
+  -
+    stratum: s2_6
+    good: false
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      yymm_hecho: 200206
+      p_str: PARA
+  -
+    stratum: s2_7
+    good: false
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      yymm_hecho: 200207
+      p_str: PARA
+  -
+    stratum: s2_8
+    good: false
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      yymm_hecho: 200208
+      p_str: PARA
+  -
+    stratum: s2_9
+    good: false
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      yymm_hecho: 200209
+      p_str: PARA
+  -
+    stratum: s2_10
+    good: false
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      yymm_hecho: 200210
+      p_str: PARA
+  -
+    stratum: s2_11
+    good: false
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      yymm_hecho: 200211
+      p_str: PARA
+  -
+    stratum: s2_12
+    good: false
+    criteria:
+      yy_hecho_start: 2002
+      yy_hecho_end: 2002
+      yymm_hecho: 200212
+      p_str: PARA
 superstrata:
   -
     name: g1-g2
@@ -467,3 +659,69 @@ superstrata:
       - g22
       - g23
       - g24
+  -
+    name: s1
+    strata:
+      - s1_1
+      - s1_2
+      - s1_3
+      - s1_4
+      - s1_5
+      - s1_6
+      - s1_7
+      - s1_8
+      - s1_9
+      - s1_10
+      - s1_11
+      - s1_12
+  -
+    name: s2
+    strata:
+      - s2_1
+      - s2_2
+      - s2_3
+      - s2_4
+      - s2_5
+      - s2_6
+      - s2_7
+      - s2_8
+      - s2_9
+      - s2_10
+      - s2_11
+      - s2_12
+  -
+    name: s1a
+    strata:
+      - s1_1
+      - s1_2
+      - s1_3
+      - s1_4
+      - s1_5
+      - s1_6
+  -
+    name: s1b
+    strata:
+      - s1_7
+      - s1_8
+      - s1_9
+      - s1_10
+      - s1_11
+      - s1_12
+  -
+    name: s2a
+    strata:
+      - s2_1
+      - s2_2
+      - s2_3
+      - s2_4
+      - s2_5
+      - s2_6
+  -
+    name: s2b
+    strata:
+      - s2_7
+      - s2_8
+      - s2_9
+      - s2_10
+      - s2_11
+      - s2_12
